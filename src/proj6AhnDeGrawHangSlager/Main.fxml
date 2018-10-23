@@ -4,8 +4,8 @@
  * Class: CS 361
  * Project 4
  * Date: October 2, 2018
- ************************
- * Edited By: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
+ *
+ * Names: Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou
  * Project 5
  * Date: October 12, 2018
 -->
@@ -54,9 +54,9 @@
         </Menu>
     </MenuBar>
     <ToolBar>
-        <Button fx:id="compileButton" onAction="#handleCompile" text="Compile" disable="true"/>
-        <Button fx:id="compileRunButton" onAction="#handleCompileAndRun" text="Compile And Run" disable="true"/>
-        <Button fx:id="stopButton" onAction="#handleStop" text="Stop" disable="true" />
+        <Button fx:id="compileButton" onAction="#handleCompile" text="Compile"/>
+        <Button fx:id="compileRunButton" onAction="#handleCompileAndRun" text="Compile And Run" />
+        <Button fx:id="stopButton" onAction="#handleStop" text="Stop" />
     </ToolBar>
     <TabPane fx:id="tabPane" prefHeight="392.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
     </TabPane>

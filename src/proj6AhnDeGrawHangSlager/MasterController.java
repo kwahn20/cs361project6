@@ -1,6 +1,6 @@
 /*
- * File: ToolbarController.java
- * Names: Matt Jones, Kevin Zhou, Kevin Ahn, Jackie Hang
+ * File: MasterController.java
+ * Names: Kevin Ahn, Matt Jones, Jackie Hang, Kevin Zhou
  * Class: CS 361
  * Project 4
  * Date: October 2, 2018
@@ -13,8 +13,6 @@
 package proj6AhnDeGrawHangSlager;
 
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -27,9 +25,10 @@ import javafx.event.Event;
  * This is the master controller for the program. it references
  * the other controllers for proper menu functionality.
  *
+ * @author  Kevin Ahn, Jackie Hang, Matt Jones, Kevin Zhou
  * @author  Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
  * @version 2.0
- * @since   10-12-2018
+ * @since   10-3-2018
  */
 public class MasterController {
     @FXML private Menu editMenu;
@@ -42,34 +41,21 @@ public class MasterController {
     @FXML private Button stopButton;
     @FXML private Button compileButton;
     @FXML private Button compileRunButton;
-    private Tab curTab;
     private EditController editController;
     private FileController fileController;
     private ToolbarController toolbarController;
-    private BooleanProperty compileDisable;
-    private BooleanProperty compileRunDisable;
 
-    /**
-     * Constructor for the class. Initializes the three controllers
-     * and sets the current Tab to null
-     */
-    public MasterController() {
-        curTab = null;
-    }
-
-    @FXML public void initialize(){
+    @FXML
+    public void initialize(){
         editController = new EditController(tabPane);
-        fileController = new FileController(vBox,tabPane);
-        toolbarController = new ToolbarController(console);
+        fileController = new FileController(vBox,tabPane,this);
+        toolbarController = new ToolbarController(console,stopButton,compileButton,compileRunButton,tabPane);
         SimpleListProperty<Tab> listProperty = new SimpleListProperty<Tab> (tabPane.getTabs());
         editMenu.disableProperty().bind(listProperty.emptyProperty());
         saveMenuItem.disableProperty().bind(listProperty.emptyProperty());
         saveAsMenuItem.disableProperty().bind(listProperty.emptyProperty());
         closeMenuItem.disableProperty().bind(listProperty.emptyProperty());
-        compileDisable = new SimpleBooleanProperty();
-        compileRunDisable = new SimpleBooleanProperty();
-        compileButton.disableProperty().bind(saveMenuItem.disableProperty().or(compileDisable));
-        compileRunButton.disableProperty().bind(saveMenuItem.disableProperty().or(compileRunDisable));
+        disableToolbar();
     }
 
     /**
@@ -81,26 +67,44 @@ public class MasterController {
         toolbarController.handleUserKeypress(ke);
     }
 
+    private void callProperCompileMethod(String compileMethod) throws InterruptedException{
+        if (compileMethod.equals("handleCompile")) {
+            toolbarController.handleCompile(fileController.getFileName());
+        }
+        else {
+            toolbarController.handleCompileAndRun(fileController.getFileName());
+        }
+    }
+
+    private void compileHelper(String compileMethod) throws InterruptedException{
+        toolbarController.disableCompileAndRunButtons();
+        if(!fileController.getSaveStatus()) {
+            String saveResult = toolbarController.handleCompileSaveDialog();
+            if (saveResult == "yesButton") {
+                fileController.handleSave();
+                callProperCompileMethod(compileMethod);
+            } else if (saveResult == "noButton") {
+                if(fileController.getFileName() == null){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Cannot compile a file with no previous saved version.");
+                    alert.showAndWait();
+                }
+                callProperCompileMethod(compileMethod);
+            }else{ return;}
+        } else {
+            callProperCompileMethod(compileMethod);
+        }
+    }
+
     /**
      * Handler for the Compile in the toolbar. Checks if the current file
      * has been saved. If it has not, prompts the user to save, if so,
      * compiles the program. If user chooses not to save, compiles last
      * version of the file.
      */
-    @FXML public void handleCompile() throws InterruptedException {
-        disableToolbarButtons();
-        if(!fileController.getSaveStatus()) {
-            String saveResult = toolbarController.handleCompileSave();
-            if (saveResult == "yesButton") {
-                fileController.handleSave();
-                toolbarController.handleCompile(fileController.getFileName());
-            } else if (saveResult == "noButton") {
-                toolbarController.handleCompile(fileController.getFileName());
-            }
-        } else {
-            toolbarController.handleCompile(fileController.getFileName());
-        }
-        //enableToolbarButtons();
+    @FXML public void handleCompile() throws InterruptedException{
+        toolbarController.disableCompileAndRunButtons();
+        compileHelper("handleCompile");
     }
 
     /**
@@ -110,20 +114,9 @@ public class MasterController {
      * If user chooses not to save, compiles and runs the last
      * version of the file.
      */
-    @FXML public void handleCompileAndRun() {
-        disableToolbarButtons();
-        if(!fileController.getSaveStatus()) {
-            String saveResult = toolbarController.handleCompileSave();
-            if (saveResult == "yesButton") {
-                System.out.println("This is executing");
-                fileController.handleSave();
-                toolbarController.handleCompileAndRun(fileController.getFileName());
-            } else if (saveResult == "noButton") {
-                toolbarController.handleCompileAndRun(fileController.getFileName());
-            }
-        } else {
-            toolbarController.handleCompileAndRun(fileController.getFileName());
-        }
+    @FXML public void handleCompileAndRun() throws InterruptedException {
+        toolbarController.disableCompileAndRunButtons();
+        compileHelper("handleCompileAndRun");
     }
 
     /**
@@ -132,7 +125,11 @@ public class MasterController {
      */
     @FXML public void handleStop(){
         toolbarController.handleStop();
-        enableToolbarButtons();
+        if(this.tabPane.getTabs().isEmpty()) {
+            this.stopButton.setDisable(true);
+            return;
+        }
+        toolbarController.enableCompileAndRunButtons();
     }
 
     /**
@@ -149,8 +146,10 @@ public class MasterController {
      * Also sets the current tab for both the file and edit controllers.
      */
     @FXML public void handleNew() {
-        Tab newTab = fileController.handleNew();
-        enableToolbarButtons();
+        fileController.handleNew();
+        if(!toolbarController.getTaskStatus()) {
+            toolbarController.enableCompileAndRunButtons();
+        }
     }
 
     /**
@@ -160,8 +159,10 @@ public class MasterController {
      * Also sets the current tab for both the file and edit controllers.
      */
     @FXML public void handleOpen() {
-        Tab newTab = fileController.handleOpen();
-        enableToolbarButtons();
+        fileController.handleOpen();
+        if(!toolbarController.getTaskStatus()) {
+            toolbarController.enableCompileAndRunButtons();
+        }
     }
 
     /**
@@ -171,8 +172,11 @@ public class MasterController {
      * Otherwise, just close the tab.
      */
     @FXML public void handleClose(Event event) {
-        disableToolbarButtons();
         fileController.handleClose(event);
+        if (this.tabPane.getTabs().isEmpty()&&!toolbarController.getTaskStatus()){
+            disableToolbar();
+        }
+
     }
 
     /**
@@ -202,59 +206,59 @@ public class MasterController {
      * Returns when the user cancels exiting any tab.
      */
     @FXML public void handleExit(Event event) {
+        toolbarController.handleStop();
         fileController.handleExit(event);
     }
 
     /**
      * Handler for the "Undo" menu item in the "Edit" menu.
      */
-    @FXML public void handleUndo() { editController.handleUndo(); }
+    @FXML
+    public void handleUndo() { editController.handleUndo(); }
 
     /**
      * Handler for the "Redo" menu item in the "Edit" menu.
      */
-    @FXML public void handleRedo() {
+    @FXML
+    public void handleRedo() {
         editController.handleRedo(); }
 
     /**
      * Handler for the "Cut" menu item in the "Edit" menu.
      */
-    @FXML public void handleCut() {
+    @FXML
+    public void handleCut() {
         editController.handleCut(); }
 
     /**
      * Handler for the "Copy" menu item in the "Edit" menu.
      */
-    @FXML public void handleCopy() {
+    @FXML
+    public void handleCopy() {
         editController.handleCopy();}
 
     /**
      * Handler for the "Paste" menu item in the "Edit" menu.
      */
-    @FXML public void handlePaste() {
+    @FXML
+    public void handlePaste() {
         editController.handlePaste(); }
 
     /**
      * Handler for the "SelectAll" menu item in the "Edit" menu.
      */
-    @FXML public void handleSelectAll() {
+    @FXML
+    public void handleSelectAll() {
         editController.handleSelectAll(); }
 
     /**
-     * Disables the Compile and Compile and Run buttons, enables the Stop button.
+     * Disables the Compile, Compile and Run, and Stop buttons in the toolbar
      */
-    private void disableToolbarButtons() {
-        this.compileDisable.set(true);
-        this.compileRunDisable.set(true);
-        this.stopButton.setDisable(false);
+    private void disableToolbar(){
+        this.compileButton.setDisable(true);
+        this.compileRunButton.setDisable(true);
+        this.stopButton.setDisable(true);
     }
 
-    /**
-     * Enables the Compile and Compile and Run buttons, disables the Stop button.
-     */
-    private void enableToolbarButtons() {
-        this.compileDisable.set(false);
-        this.compileRunDisable.set(false);
-        stopButton.setDisable(true);
-    }
+
 }

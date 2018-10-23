@@ -1,6 +1,6 @@
 /*
- * File: ToolbarController.java
- * Names: Matt Jones, Kevin Zhou, Kevin Ahn, Jackie Hang
+ * File: FileController.java
+ * Names: Kevin Ahn, Matt Jones, Jackie Hang, Kevin Zhou
  * Class: CS 361
  * Project 4
  * Date: October 2, 2018
@@ -16,7 +16,6 @@ import javafx.event.Event;
 import java.util.Scanner;
 import java.util.Optional;
 import java.io.File;
-// import java.awt.Button;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,7 +29,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.layout.VBox;
@@ -48,26 +46,32 @@ import org.fxmisc.richtext.LineNumberFactory;
  * within the pane, and the File objects of the current tabs.
  *
  * @author  Kevin Ahn, Jackie Hang, Matt Jones, Kevin Zhou
- * @version 1.0
+ * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou
+ * @version 3.0
  * @since   10-3-2018
  */
 public class FileController {
-    // these fields are updated via handleUpdateCurrentTab() whenever
-    // the tab selection changes
+
     private TabPane tabPane;
+
+    // "True" means that the file has not been changed since its last save,
+    // if any. False means that something has been changed in the file.
     private HashMap<Tab, Boolean> saveStatus;
+
     private HashMap<Tab, String> filenames;
     private VBox vBox;
+    private MasterController mController;
 
     /**
-     * Constructor for the class. intializes the save status
+     * Constructor for the class. Intializes the save status
      * and the filenames in a HashMap
      */
-    public FileController(VBox vBox, TabPane tabPane) {
+    public FileController(VBox vBox, TabPane tabPane,MasterController mController) {
         this.saveStatus = new HashMap<>();
         this.filenames = new HashMap<>();
         this.vBox = vBox;
         this.tabPane = tabPane;
+        this.mController = mController;
     }
 
     /**
@@ -87,7 +91,9 @@ public class FileController {
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle("About");
         dialog.setHeaderText(null);
-        dialog.setContentText("Current Version Authors: Kyle Slager, Jackie Hang, Kevin Ahn, Lucas Degraw" + "Version 2 Authors: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou\n" + "Version 1 Authors: Matt Jones, Kevin Zhou, Kevin Ahn, Jackie Hang\n" +
+        dialog.setContentText("V3 Authors: Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager\n" +
+                "Version 2 Authors: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou\n" +
+                "Version 1 Authors: Kevin Ahn, Matt Jones, Jackie Hang, Kevin Zhou\n" +
                 "This application is a basic IDE with syntax highlighting.");
         dialog.showAndWait();
     }
@@ -138,10 +144,10 @@ public class FileController {
             if (saveStatus.get(curTab))
                 this.closeTab();
             else
-                this.askSaveAndClose(event);
+                this.askSaveAndClose(curTab.getText(),event);
         } else {
             if(!filenames.isEmpty()) {
-                this.askSaveAndClose(event);
+                this.askSaveAndClose(curTab.getText(),event);
             }
         }
     }
@@ -207,16 +213,14 @@ public class FileController {
         Platform.exit();
     }
 
-
     /**
      * Creates a pop-up window which allows the user to select whether they wish to save
      * the current file or not.
      * Used by handleClose.
      *
-     * @param event the tab close event
+     * @param filename The filename of the file to be saved (or not) at the user's discretion
      */
-    private void askSaveAndClose(Event event) {
-
+    private void askSaveAndClose(String filename,Event event) {
         ShowSaveOptionAlert saveOptions = new ShowSaveOptionAlert();
         Optional<ButtonType> result = saveOptions.getUserSaveDecision();
 
@@ -225,9 +229,7 @@ public class FileController {
                 event.consume();
                 return;
             } else if (result.get() == saveOptions.getYesButton()) {
-
                 boolean isNotCancelled = this.handleSave();
-
                 if(isNotCancelled) {
                     this.closeTab();
                 } else {
@@ -238,8 +240,6 @@ public class FileController {
             this.closeTab();
         }
     }
-
-
 
     /**
      * Saves the text present in the current tab to a given filename.
@@ -262,9 +262,10 @@ public class FileController {
         }
         catch (IOException e) {
             Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setHeaderText("File Error");
-            alert.setContentText("File not found or is read-only. Please select a new file.");
+            alert.setHeaderText("File Not Found");
+            alert.setContentText("Cannot find file. Please select a new file or try again.");
             alert.showAndWait();
+            return;
         }
 
         // update File array
@@ -304,16 +305,17 @@ public class FileController {
 
         // creation of the codeArea
         JavaCodeArea codeArea = new JavaCodeArea();
-        codeArea.setOnKeyPressed(event -> setSaveStatus());
+        codeArea.setOnKeyPressed(event -> markFileAsSaved());
         codeArea.replaceText(content);
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 
+        // creation of the tab
         Tab newTab = new Tab(filename, new VirtualizedScrollPane<>(codeArea,
                 ScrollPane.ScrollBarPolicy.ALWAYS,
                 ScrollPane.ScrollBarPolicy.ALWAYS));
         tabPane.getTabs().add(0,newTab);
         tabPane.getSelectionModel().select(newTab);
-        newTab.setOnCloseRequest(event -> handleClose(event));
+        newTab.setOnCloseRequest(event -> mController.handleClose(event));
         return newTab;
     }
 
@@ -345,7 +347,7 @@ public class FileController {
      * Set the current save status of the current
      * tab to false.
      */
-    private void setSaveStatus() {
+    private void markFileAsSaved() {
         Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
         saveStatus.replace(curTab, false);
     }

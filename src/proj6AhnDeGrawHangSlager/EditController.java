@@ -44,7 +44,10 @@ public class EditController {
      */
     @FXML
     public void handleUndo() {
-        getCurCodeArea().undo();
+        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
+        VirtualizedScrollPane<org.fxmisc.richtext.CodeArea> curPane =
+                (VirtualizedScrollPane<org.fxmisc.richtext.CodeArea>) curTab.getContent();
+        curPane.getContent().undo();
     }
 
     /**
@@ -52,7 +55,10 @@ public class EditController {
      */
     @FXML
     public void handleRedo() {
-        getCurCodeArea().redo();
+        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
+        VirtualizedScrollPane<org.fxmisc.richtext.CodeArea> curPane =
+                (VirtualizedScrollPane<org.fxmisc.richtext.CodeArea>) curTab.getContent();
+        curPane.getContent().redo();
     }
 
     /**
@@ -60,7 +66,10 @@ public class EditController {
      */
     @FXML
     public void handleCut() {
-        getCurCodeArea().cut();
+        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
+        VirtualizedScrollPane<CodeArea> curPane =
+                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
+        curPane.getContent().cut();
     }
 
     /**
@@ -68,7 +77,10 @@ public class EditController {
      */
     @FXML
     public void handleCopy() {
-        getCurCodeArea().copy();
+        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
+        VirtualizedScrollPane<CodeArea> curPane =
+                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
+        curPane.getContent().copy();
 
     }
 
@@ -77,7 +89,10 @@ public class EditController {
      */
     @FXML
     public void handlePaste() {
-        getCurCodeArea().paste();
+        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
+        VirtualizedScrollPane<CodeArea> curPane =
+                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
+        curPane.getContent().paste();
 
     }
 
@@ -86,14 +101,10 @@ public class EditController {
      */
     @FXML
     public void handleSelectAll() {
-        getCurCodeArea().selectAll();
-    }
-
-
-    private JavaCodeArea getCurCodeArea() {
         Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
         VirtualizedScrollPane<CodeArea> curPane =
                 (VirtualizedScrollPane<CodeArea>) curTab.getContent();
-        return (JavaCodeArea) curPane.getContent();
+        curPane.getContent().selectAll();
     }
+
 }
