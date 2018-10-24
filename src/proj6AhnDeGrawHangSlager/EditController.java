@@ -12,11 +12,13 @@
 
 package proj6AhnDeGrawHangSlager;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.NavigationActions.SelectionPolicy;
+import java.util.regex.Pattern;
+
 
 /**
  * This is the controller class for all of the edit functions
@@ -45,10 +47,7 @@ public class EditController {
      */
     @FXML
     public void handleUndo() {
-        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
-        VirtualizedScrollPane<org.fxmisc.richtext.CodeArea> curPane =
-                (VirtualizedScrollPane<org.fxmisc.richtext.CodeArea>) curTab.getContent();
-        curPane.getContent().undo();
+        getCurJavaCodeArea().undo();
     }
 
     /**
@@ -56,10 +55,7 @@ public class EditController {
      */
     @FXML
     public void handleRedo() {
-        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
-        VirtualizedScrollPane<org.fxmisc.richtext.CodeArea> curPane =
-                (VirtualizedScrollPane<org.fxmisc.richtext.CodeArea>) curTab.getContent();
-        curPane.getContent().redo();
+        getCurJavaCodeArea().redo();
     }
 
     /**
@@ -67,10 +63,7 @@ public class EditController {
      */
     @FXML
     public void handleCut() {
-        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
-        VirtualizedScrollPane<CodeArea> curPane =
-                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
-        curPane.getContent().cut();
+        getCurJavaCodeArea().cut();
     }
 
     /**
@@ -78,10 +71,7 @@ public class EditController {
      */
     @FXML
     public void handleCopy() {
-        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
-        VirtualizedScrollPane<CodeArea> curPane =
-                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
-        curPane.getContent().copy();
+        getCurJavaCodeArea().copy();
 
     }
 
@@ -90,10 +80,7 @@ public class EditController {
      */
     @FXML
     public void handlePaste() {
-        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
-        VirtualizedScrollPane<CodeArea> curPane =
-                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
-        curPane.getContent().paste();
+        getCurJavaCodeArea().paste();
 
     }
 
@@ -102,23 +89,65 @@ public class EditController {
      */
     @FXML
     public void handleSelectAll() {
-        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
-        VirtualizedScrollPane<CodeArea> curPane =
-                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
-        curPane.getContent().selectAll();
+        getCurJavaCodeArea().selectAll();
     }
 
     @FXML
     public void handleDarkMode(){
         for(Tab tab: this.tabPane.getTabs()){
-            VirtualizedScrollPane<CodeArea> curPane =
-                    (VirtualizedScrollPane<CodeArea>) tab.getContent();
-            CodeArea codeArea = curPane.getContent();
+
+            CodeArea codeArea = getCurJavaCodeArea();
             System.out.println(codeArea.getStylesheets());
             codeArea.getStylesheets().add("proj6AhnDeGrawHangSlager/DarkMode.css");
             System.out.println(codeArea.getStylesheets());
         }
     }
 
+    /**
+     * comments out the line that the cursor is one if it uncommented,
+     * undoes a "layer" of commenting (pair of forward slashes "//") if there is at least one
+     */
+    public void toggleSingleLineComment() {
+
+        // handle single line comment toggling
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
+
+        // position caret at start of line
+        curCodeArea.lineStart( SelectionPolicy.ADJUST );
+
+        // get caret index location in file
+        int caretIdx = curCodeArea.getCaretPosition();
+
+        // temporarily highlight the current line to get its text as a string
+        curCodeArea.selectLine();
+        String curLineText = curCodeArea.getSelectedText();
+        curCodeArea.deselect();
+
+        // regex to check if current line is commented
+        if ( Pattern.matches("(?:\\/\\/.*)", curLineText) ) {
+
+            // uncomment the line by taking out the first instance of "//"
+            String curLineUncommented = curLineText.replaceFirst("//", "");
+
+            // replace the current line with the newly commented line
+            curCodeArea.replaceText(caretIdx, caretIdx+curLineText.length(),
+                                                    curLineUncommented);
+            return;
+        }
+
+        // add a "//" at the beginning of the line to comment it out
+        curCodeArea.replaceText(caretIdx, caretIdx, "//");
+    }
+
+    /**
+     *
+     * @return the JavaCodeArea currently in focus of the TabPane
+     */
+    public JavaCodeArea getCurJavaCodeArea() {
+        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
+        VirtualizedScrollPane<CodeArea> curPane =
+                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
+        return (JavaCodeArea)curPane.getContent();
+    }
 
 }

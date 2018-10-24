@@ -69,6 +69,11 @@ public class MasterController {
         toolbarController.handleUserKeypress(ke);
     }
 
+
+    @FXML public void handleCommenting() {
+        editController.toggleSingleLineComment();
+    }
+
     private void callProperCompileMethod(String compileMethod) throws InterruptedException{
         if (compileMethod.equals("handleCompile")) {
             toolbarController.handleCompile(fileController.getFileName());
