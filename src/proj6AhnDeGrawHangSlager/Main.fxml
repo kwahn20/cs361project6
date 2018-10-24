@@ -49,6 +49,7 @@
             <MenuItem mnemonicParsing="false" onAction="#handleCopy" text="Copy" accelerator="Shortcut+C"/>
             <MenuItem mnemonicParsing="false" onAction="#handlePaste"
                       text="Paste" accelerator="Shortcut+V"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleCommenting" text="Comment/Uncomment" accelerator="Shortcut+/"/>
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll"
                       text="Select All" accelerator="Shortcut+A"/>
         </Menu>
