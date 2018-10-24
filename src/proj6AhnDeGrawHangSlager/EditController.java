@@ -12,6 +12,7 @@
 
 package proj6AhnDeGrawHangSlager;
 
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -106,5 +107,18 @@ public class EditController {
                 (VirtualizedScrollPane<CodeArea>) curTab.getContent();
         curPane.getContent().selectAll();
     }
+
+    @FXML
+    public void handleDarkMode(){
+        for(Tab tab: this.tabPane.getTabs()){
+            VirtualizedScrollPane<CodeArea> curPane =
+                    (VirtualizedScrollPane<CodeArea>) tab.getContent();
+            CodeArea codeArea = curPane.getContent();
+            System.out.println(codeArea.getStylesheets());
+            codeArea.getStylesheets().add("proj6AhnDeGrawHangSlager/DarkMode.css");
+            System.out.println(codeArea.getStylesheets());
+        }
+    }
+
 
 }

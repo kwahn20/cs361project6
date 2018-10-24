@@ -37,10 +37,12 @@ public class MasterController {
     @FXML private MenuItem saveMenuItem;
     @FXML private MenuItem saveAsMenuItem;
     @FXML private MenuItem closeMenuItem;
+    @FXML private MenuItem darkModeMenuItem;
     @FXML private Console console;
     @FXML private Button stopButton;
     @FXML private Button compileButton;
     @FXML private Button compileRunButton;
+
     private EditController editController;
     private FileController fileController;
     private ToolbarController toolbarController;
@@ -250,6 +252,14 @@ public class MasterController {
     @FXML
     public void handleSelectAll() {
         editController.handleSelectAll(); }
+
+
+    @FXML
+    public void handleDarkMode(){
+        //editController.handleDarkMode();
+        //vBox.getStylesheets().remove(-1);
+        vBox.getStylesheets().add("proj6AhnDeGrawHangSlager/DarkMode.css");
+    }
 
     /**
      * Disables the Compile, Compile and Run, and Stop buttons in the toolbar

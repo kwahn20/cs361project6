@@ -29,7 +29,7 @@
       fx:id = "vBox"
       stylesheets = "@Main.css">
     <MenuBar>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About..."/>
             <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem mnemonicParsing="false" onAction="#handleNew" text="New" accelerator="Shortcut+N"/>
@@ -51,6 +51,9 @@
                       text="Paste" accelerator="Shortcut+V"/>
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll"
                       text="Select All" accelerator="Shortcut+A"/>
+        </Menu>
+        <Menu fx:id = "prefMenu" mnemonicParsing="false" text="Preferences">
+            <MenuItem fx:id="darkModeMenuItem" mnemonicParsing="false" onAction="#handleDarkMode" text="Dark Mode"/>
         </Menu>
     </MenuBar>
     <ToolBar>
