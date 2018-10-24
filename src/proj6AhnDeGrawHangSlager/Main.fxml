@@ -53,6 +53,7 @@
                       text="Select All" accelerator="Shortcut+A"/>
         </Menu>
         <Menu fx:id = "prefMenu" mnemonicParsing="false" text="Preferences">
+            <MenuItem fx:id="normalModeMenuItem" mnemonicParsing="false" onAction="#handleNormalMode" text="Normal Mode" />
             <MenuItem fx:id="darkModeMenuItem" mnemonicParsing="false" onAction="#handleDarkMode" text="Dark Mode"/>
         </Menu>
     </MenuBar>

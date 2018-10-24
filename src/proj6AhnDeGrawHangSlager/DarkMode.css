@@ -101,7 +101,7 @@
     -fx-font-weight: bold;
 }
 .string {
-    -fx-fill: blue;
+    -fx-fill: #008ae6;
 }
 
 .comment {

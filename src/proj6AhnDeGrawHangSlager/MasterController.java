@@ -13,6 +13,7 @@
 package proj6AhnDeGrawHangSlager;
 
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -38,6 +39,7 @@ public class MasterController {
     @FXML private MenuItem saveAsMenuItem;
     @FXML private MenuItem closeMenuItem;
     @FXML private MenuItem darkModeMenuItem;
+    @FXML private MenuItem normalModeMenuItem;
     @FXML private Console console;
     @FXML private Button stopButton;
     @FXML private Button compileButton;
@@ -57,6 +59,7 @@ public class MasterController {
         saveMenuItem.disableProperty().bind(listProperty.emptyProperty());
         saveAsMenuItem.disableProperty().bind(listProperty.emptyProperty());
         closeMenuItem.disableProperty().bind(listProperty.emptyProperty());
+        normalModeMenuItem.disableProperty().bind(darkModeMenuItem.disableProperty().not());
         disableToolbar();
     }
 
@@ -261,9 +264,14 @@ public class MasterController {
 
     @FXML
     public void handleDarkMode(){
-        //editController.handleDarkMode();
-        //vBox.getStylesheets().remove(-1);
         vBox.getStylesheets().add("proj6AhnDeGrawHangSlager/DarkMode.css");
+        darkModeMenuItem.setDisable(true);
+    }
+
+    @FXML
+    public void handleNormalMode(){
+        vBox.getStylesheets().remove(vBox.getStylesheets().size()-1);
+        darkModeMenuItem.setDisable(false);
     }
 
     /**
