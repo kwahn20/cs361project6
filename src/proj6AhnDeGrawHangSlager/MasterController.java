@@ -276,6 +276,10 @@ public class MasterController {
         editController.handleSelectAll(); }
 
 
+
+    @FXML
+    public void handleFind(){}
+
     @FXML
     public void handleDarkMode(){
         vBox.getStylesheets().add("proj6AhnDeGrawHangSlager/DarkMode.css");

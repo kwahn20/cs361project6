@@ -54,6 +54,7 @@
 
 .menu-item{
     -fx-background-color: #737373;
+
 }
 
 
@@ -115,3 +116,6 @@
     -fx-background-color: #595959;
 }
 
+.lineno{
+    -fx-background-color: #262626;
+}

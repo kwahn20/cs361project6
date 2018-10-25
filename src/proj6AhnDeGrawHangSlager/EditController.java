@@ -150,7 +150,7 @@ public class EditController {
         String highlightedText = curJavaCodeArea.getSelectedText();
 
         if (highlightedText.isEmpty()) {
-            showAlert("NOTHING HIGHLIGHTED");
+            showAlert("Please Highlight a Bracket!");
             return;
         }
         else if (highlightedText.length() == 1) {
