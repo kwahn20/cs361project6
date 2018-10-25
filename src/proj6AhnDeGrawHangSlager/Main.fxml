@@ -59,6 +59,7 @@
             <MenuItem mnemonicParsing="false" onAction="#handleUnTabbing" text="Detab" accelerator="Shortcut+["/>
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll"
                       text="Select All" accelerator="Shortcut+A"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleMatchBracketOrParen" text="Match Bracket/Parenthesis" accelerator="Shortcut+M"/>
         </Menu>
         <Menu fx:id="prefMenu" mnemonicParsing="false" text="Preferences">
             <MenuItem fx:id="normalModeMenuItem" mnemonicParsing="false" onAction="#handleNormalMode"

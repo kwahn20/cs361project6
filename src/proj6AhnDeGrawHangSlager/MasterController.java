@@ -84,11 +84,11 @@ public class MasterController {
     }
 
     @FXML public void handleTabbing() {
-        editController.SingleLineTabbing();
+        editController.singleLineTabbing();
     }
 
     @FXML public void handleUnTabbing() {
-        editController.SingleLineUnTabbing();
+        editController.singleLineUntabbing();
     }
 
     private void callProperCompileMethod(String compileMethod) throws InterruptedException{
@@ -297,5 +297,8 @@ public class MasterController {
         this.stopButton.setDisable(true);
     }
 
-
+    @FXML
+    public void handleMatchBracketOrParen() {
+        editController.handleMatchBracketOrParen();
+    }
 }
