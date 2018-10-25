@@ -77,6 +77,14 @@ public class MasterController {
         editController.toggleSingleLineComment();
     }
 
+    @FXML public void handleTabbing() {
+        editController.SingleLineTabbing();
+    }
+
+    @FXML public void handleUnTabbing() {
+        editController.SingleLineUnTabbing();
+    }
+
     private void callProperCompileMethod(String compileMethod) throws InterruptedException{
         if (compileMethod.equals("handleCompile")) {
             toolbarController.handleCompile(fileController.getFileName());

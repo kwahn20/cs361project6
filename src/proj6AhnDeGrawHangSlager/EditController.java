@@ -140,6 +140,67 @@ public class EditController {
     }
 
     /**
+     * comments out the line that the cursor is one if it uncommented,
+     * undoes a "layer" of commenting (pair of forward slashes "//") if there is at least one
+     */
+    public void SingleLineTabbing() {
+
+        // handle single line comment toggling
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
+
+        // position caret at start of line
+        curCodeArea.lineStart( SelectionPolicy.ADJUST );
+
+        // get caret index location in file
+        int caretIdx = curCodeArea.getCaretPosition();
+
+        // temporarily highlight the current line to get its text as a string
+        curCodeArea.selectLine();
+        String curLineText = curCodeArea.getSelectedText();
+        curCodeArea.deselect();
+
+        // add a "//" at the beginning of the line to comment it out
+        curCodeArea.replaceText(caretIdx, caretIdx, "\t");
+    }
+
+    /**
+     * comments out the line that the cursor is one if it uncommented,
+     * undoes a "layer" of commenting (pair of forward slashes "//") if there is at least one
+     */
+    public void SingleLineUnTabbing() {
+
+        // handle single line comment toggling
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
+
+        // position caret at start of line
+        curCodeArea.lineStart( SelectionPolicy.ADJUST );
+
+        // get caret index location in file
+        int caretIdx = curCodeArea.getCaretPosition();
+
+        // temporarily highlight the current line to get its text as a string
+        curCodeArea.selectLine();
+        String curLineText = curCodeArea.getSelectedText();
+        curCodeArea.deselect();
+
+        // regex to check if current line is commented
+        if ( Pattern.matches("(?:[ \\t].*)", curLineText) ) {
+
+            // uncomment the line by taking out the first instance of "//"
+            String curLineUncommented = curLineText.replaceFirst("[ \\t]", "");
+
+            // replace the current line with the newly commented line
+            curCodeArea.replaceText(caretIdx, caretIdx+curLineText.length(),
+                    curLineUncommented);
+            return;
+        }
+
+    }
+
+
+
+
+    /**
      *
      * @return the JavaCodeArea currently in focus of the TabPane
      */

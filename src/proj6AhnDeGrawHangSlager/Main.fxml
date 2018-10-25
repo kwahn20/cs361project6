@@ -19,15 +19,16 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.VBox?>
 <?import proj6AhnDeGrawHangSlager.Console?>
-<?import org.fxmisc.flowless.VirtualizedScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
       minWidth="-Infinity" prefHeight="800.0"
       prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="proj6AhnDeGrawHangSlager.MasterController"
-      fx:id = "vBox"
-      stylesheets = "@Main.css">
+      fx:id="vBox"
+      stylesheets="@Main.css">
     <MenuBar>
         <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About..."/>
@@ -36,39 +37,47 @@
             <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open..." accelerator="Shortcut+O"/>
             <MenuItem mnemonicParsing="false" fx:id="closeMenuItem" onAction="#handleClose"
                       text="Close" disable="true" accelerator="Shortcut+W"/>
-            <MenuItem mnemonicParsing="false" fx:id="saveMenuItem" onAction="#handleSave" text="Save" disable = "true" accelerator="Shortcut+S"/>
+            <MenuItem mnemonicParsing="false" fx:id="saveMenuItem" onAction="#handleSave" text="Save" disable="true"
+                      accelerator="Shortcut+S"/>
             <MenuItem mnemonicParsing="false" fx:id="saveAsMenuItem" onAction="#handleSaveAs"
-                      text="Save As..." disable = "true" />
+                      text="Save As..." disable="true"/>
             <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" accelerator="Shortcut+Q"/>
         </Menu>
-        <Menu fx:id = "editMenu" mnemonicParsing="false" text="Edit">
+        <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
             <MenuItem mnemonicParsing="false" onAction="#handleUndo" text="Undo" accelerator="Shortcut+Z"/>
             <MenuItem mnemonicParsing="false" onAction="#handleRedo" text="Redo" accelerator="Shortcut+Shift+Z"/>
             <MenuItem mnemonicParsing="false" onAction="#handleCut" text="Cut" accelerator="Shortcut+X"/>
             <MenuItem mnemonicParsing="false" onAction="#handleCopy" text="Copy" accelerator="Shortcut+C"/>
             <MenuItem mnemonicParsing="false" onAction="#handlePaste"
                       text="Paste" accelerator="Shortcut+V"/>
-            <MenuItem mnemonicParsing="false" onAction="#handleCommenting" text="Comment/Uncomment" accelerator="Shortcut+/"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleCommenting" text="Comment/Uncomment"
+                      accelerator="Shortcut+/"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleTabbing" text="Entab" accelerator="Shortcut+]"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleUnTabbing" text="Detab" accelerator="Shortcut+["/>
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll"
                       text="Select All" accelerator="Shortcut+A"/>
         </Menu>
-        <Menu fx:id = "prefMenu" mnemonicParsing="false" text="Preferences">
-            <MenuItem fx:id="normalModeMenuItem" mnemonicParsing="false" onAction="#handleNormalMode" text="Normal Mode" />
+        <Menu fx:id="prefMenu" mnemonicParsing="false" text="Preferences">
+            <MenuItem fx:id="normalModeMenuItem" mnemonicParsing="false" onAction="#handleNormalMode"
+                      text="Normal Mode"/>
             <MenuItem fx:id="darkModeMenuItem" mnemonicParsing="false" onAction="#handleDarkMode" text="Dark Mode"/>
         </Menu>
     </MenuBar>
     <ToolBar>
         <Button fx:id="compileButton" onAction="#handleCompile" text="Compile"/>
-        <Button fx:id="compileRunButton" onAction="#handleCompileAndRun" text="Compile And Run" />
-        <Button fx:id="stopButton" onAction="#handleStop" text="Stop" />
+        <Button fx:id="compileRunButton" onAction="#handleCompileAndRun" text="Compile And Run"/>
+        <Button fx:id="stopButton" onAction="#handleStop" text="Stop"/>
     </ToolBar>
-    <TabPane fx:id="tabPane" prefHeight="392.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
-    </TabPane>
-    <VirtualizedScrollPane VBox.vgrow = "ALWAYS" prefHeight="228.0" prefWidth="1200.0" >
-        <content>
-            <Console fx:id="console" prefHeight="228.0" prefWidth="1200.0" VBox.vgrow="ALWAYS" onKeyPressed="#handleUserKeypress">
+    <SplitPane orientation="VERTICAL" focusTraversable="true" VBox.vgrow="ALWAYS">
+        <items>
+            <TabPane fx:id="tabPane" prefHeight="392.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            </TabPane>
+
+            <Console fx:id="console" prefHeight="228.0" prefWidth="1200.0" VBox.vgrow="ALWAYS"
+                     onKeyPressed="#handleUserKeypress">
             </Console>
-        </content>
-    </VirtualizedScrollPane>
+
+        </items>
+    </SplitPane>
 </VBox>
