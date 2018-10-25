@@ -1,3 +1,16 @@
+/*
+ * File: ShowSaveOptionAlert.java
+ * Names: Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
+ * Class: CS 361
+ * Project 6
+ * Date: October 26, 2018
+ * ---------------------------
+ * Edited From: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
+ * Project 5
+ * Date: October 12, 2018
+ *
+ */
+
 package proj6AhnDeGrawHangSlager;
 
 import javafx.scene.control.Alert;

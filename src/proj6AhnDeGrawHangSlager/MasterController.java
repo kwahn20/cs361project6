@@ -1,19 +1,19 @@
 /*
  * File: MasterController.java
- * Names: Kevin Ahn, Matt Jones, Jackie Hang, Kevin Zhou
+ * Names: Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * Class: CS 361
- * Project 4
- * Date: October 2, 2018
+ * Project 6
+ * Date: October 26, 2018
  * ---------------------------
- * Edited By: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
+ * Edited From: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
  * Project 5
  * Date: October 12, 2018
+ *
  */
 
 package proj6AhnDeGrawHangSlager;
 
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,9 +26,15 @@ import javafx.event.Event;
  * This is the master controller for the program. it references
  * the other controllers for proper menu functionality.
  *
- * @author  Kevin Ahn, Jackie Hang, Matt Jones, Kevin Zhou
- * @author  Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
- * @version 2.0
+ /**
+ * This class contains the handlers for each of the menu options in the IDE.
+ *
+ * Keeps track of the tab pane, the current tab, the index of the current tab
+ * within the pane, and the File objects of the current tabs.
+ *
+ * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
+ * @author  Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
+ * @version 4.0
  * @since   10-3-2018
  */
 public class MasterController {

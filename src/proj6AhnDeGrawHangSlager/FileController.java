@@ -1,13 +1,14 @@
 /*
  * File: FileController.java
- * Names: Kevin Ahn, Matt Jones, Jackie Hang, Kevin Zhou
+ * Names: Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * Class: CS 361
- * Project 4
- * Date: October 2, 2018
+ * Project 6
+ * Date: October 26, 2018
  * ---------------------------
- * Edited By: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
+ * Edited From: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
  * Project 5
  * Date: October 12, 2018
+ *
  */
 
 package proj6AhnDeGrawHangSlager;
@@ -45,8 +46,8 @@ import org.fxmisc.richtext.LineNumberFactory;
  * Keeps track of the tab pane, the current tab, the index of the current tab
  * within the pane, and the File objects of the current tabs.
  *
- * @author  Kevin Ahn, Jackie Hang, Matt Jones, Kevin Zhou
- * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou
+ * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
+ * @author  Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * @version 3.0
  * @since   10-3-2018
  */
