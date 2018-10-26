@@ -53,6 +53,7 @@ public class MasterController {
     @FXML private TextField findTextEntry;
     @FXML private Button findPrevBtn;
     @FXML private Button findNextBtn;
+    @FXML private TextField replaceTextEntry;
 
 
     private EditController editController;
@@ -61,7 +62,7 @@ public class MasterController {
 
     @FXML
     public void initialize(){
-        editController = new EditController(tabPane, findTextEntry, findPrevBtn, findNextBtn);//, findPrevBtn, findNextBtn);
+        editController = new EditController(tabPane, findTextEntry, findPrevBtn, findNextBtn, replaceTextEntry);
         fileController = new FileController(vBox,tabPane,this);
         toolbarController = new ToolbarController(console,stopButton,compileButton,compileRunButton,tabPane);
         SimpleListProperty<Tab> listProperty = new SimpleListProperty<Tab> (tabPane.getTabs());
@@ -279,8 +280,6 @@ public class MasterController {
     public void handleSelectAll() {
         editController.handleSelectAll(); }
 
-
-
     @FXML
     public void handleDarkMode(){
         vBox.getStylesheets().add("proj6AhnDeGrawHangSlager/DarkMode.css");
@@ -309,7 +308,7 @@ public class MasterController {
 
     @FXML
     public void handleFindText() {
-        editController.handleFindText();
+        editController.handleFindText(true);
     }
 
     @FXML
@@ -321,5 +320,8 @@ public class MasterController {
     public void handleHighlightNextMatch() {
         editController.handleHighlightNextMatch();
     }
+
+    @FXML
+    public void handleReplaceText() {editController.handleReplaceText(); }
 
 }

@@ -61,6 +61,7 @@
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll"
                       text="Select All" accelerator="Shortcut+A"/>
             <MenuItem mnemonicParsing="false" onAction="#handleMatchBracketOrParen" text="Match Bracket/Parenthesis" accelerator="Shortcut+M"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleFindText" text="Find" accelerator="Shortcut+F"/>
         </Menu>
         <Menu fx:id="prefMenu" mnemonicParsing="false" text="Preferences">
             <MenuItem fx:id="normalModeMenuItem" mnemonicParsing="false" onAction="#handleNormalMode"
@@ -76,6 +77,8 @@
         <Button fx:id="findButton" onAction="#handleFindText" text="Find" />
         <Button fx:id="findPrevBtn" onAction="#handleHighlightPrevMatch" text="Previous" />
         <Button fx:id="findNextBtn" onAction="#handleHighlightNextMatch" text="Next"/>
+        <TextField fx:id="replaceTextEntry" promptText="Replace" />
+        <Button fx:id="replaceBtn" onAction="#handleReplaceText" text="Replace" />
     </ToolBar>
     <SplitPane orientation="VERTICAL" focusTraversable="true" VBox.vgrow="ALWAYS">
         <items>

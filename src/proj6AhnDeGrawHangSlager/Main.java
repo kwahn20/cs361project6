@@ -40,7 +40,7 @@ public class Main extends Application{
     @Override
     public void start(Stage stage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
-        Scene scene = new Scene(root, 800, 500);
+        Scene scene = new Scene(root, 1000, 600);
         stage.setTitle("Project 06");
         stage.setScene(scene);
         stage.show();
