@@ -50,6 +50,10 @@ public class MasterController {
     @FXML private Button stopButton;
     @FXML private Button compileButton;
     @FXML private Button compileRunButton;
+    @FXML private TextField findTextEntry;
+    @FXML private Button findPrevBtn;
+    @FXML private Button findNextBtn;
+
 
     private EditController editController;
     private FileController fileController;
@@ -57,7 +61,7 @@ public class MasterController {
 
     @FXML
     public void initialize(){
-        editController = new EditController(tabPane);
+        editController = new EditController(tabPane, findTextEntry, findPrevBtn, findNextBtn);//, findPrevBtn, findNextBtn);
         fileController = new FileController(vBox,tabPane,this);
         toolbarController = new ToolbarController(console,stopButton,compileButton,compileRunButton,tabPane);
         SimpleListProperty<Tab> listProperty = new SimpleListProperty<Tab> (tabPane.getTabs());
@@ -275,8 +279,6 @@ public class MasterController {
     public void handleSelectAll() {
         editController.handleSelectAll(); }
 
-
-
     @FXML
     public void handleFind(){}
 
@@ -305,4 +307,20 @@ public class MasterController {
     public void handleMatchBracketOrParen() {
         editController.handleMatchBracketOrParen();
     }
+
+    @FXML
+    public void handleFindText() {
+        editController.handleFindText();
+    }
+
+    @FXML
+    public void handleHighlightPrevMatch() {
+        editController.handleHighlightPrevMatch();
+    }
+
+    @FXML
+    public void handleHighlightNextMatch() {
+        editController.handleHighlightNextMatch();
+    }
+
 }

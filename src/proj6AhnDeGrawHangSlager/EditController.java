@@ -19,10 +19,13 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.NavigationActions.SelectionPolicy;
 
+import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.Stack;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import javafx.util.Pair;
 
 
 /**
@@ -38,13 +41,28 @@ public class EditController {
 
     // Reference to the tab pane of the IDE
     private TabPane tabPane;
+    private TextField findTextEntry;
+    // fields relating to string finding
+    private String fileTextSearched;
+    private ArrayList<Integer> matchStartingIndices;
+    private int curMatchLength;
+    private int curMatchHighlightedIdx;
+    private Button prevMatchBtn;
+    private Button nextMatchBtn;
+
+
 
     /**
      * Constructor for the class. Initializes
      * the current tab to null
      */
-    public EditController(TabPane tabPane) {
+    public EditController(TabPane tabPane, TextField findTextEntry, Button prevMatchBtn, Button nextMatchBtn) {
         this.tabPane = tabPane;
+        this.findTextEntry = findTextEntry;
+        this.matchStartingIndices = new ArrayList<>();
+        this.prevMatchBtn = prevMatchBtn;
+        this.nextMatchBtn = nextMatchBtn;
+        this.resetFindMatchingStringFields();
     }
 
     /**
@@ -185,6 +203,10 @@ public class EditController {
             // get the indices of the highlighted character within the file
             IndexRange highlightedCharRange = curJavaCodeArea.getSelection();
 
+//            boolean parsingString = false;
+//            String strChar = null;
+//            String strCharToMatch = null;
+
             // TODO: account for opening/closing characters in commented lines
             // TODO: account for opening/closing characters within a string not limited to "{" or '{'
             if (findClosingCharacter) {
@@ -213,38 +235,44 @@ public class EditController {
                     } catch (IndexOutOfBoundsException e) {
                         System.out.println(e);
                     }
+//                    if (strChar != null && curChar.equals(strChar)) {
+//                        parsingString = !parsingString;
+//                        strChar
+//                    }
 
-                    // pop the top opening char off the stack if its closing match is found,
-                    // otherwise push the newly found opening char onto the stack
-                    switch (curChar) {
-                        case ("]"):
-                            if (openingMatchCharacter.equals("[")) charStack.pop();
-                            break;
-                        case (")"):
-                            if (openingMatchCharacter.equals("(")) charStack.pop();
-                            break;
-                        case ("}"):
-                            if (openingMatchCharacter.equals("{")) charStack.pop();
-                            break;
-                        case ("["):
-                            charStack.push(curChar);
-                            break;
-                        case ("("):
-                            charStack.push(curChar);
-                            break;
-                        case ("{"):
-                            charStack.push(curChar);
-                            break;
-                        default:
-                            break;
-                    }
-                    // stack is empty if the originally highlighted character has been
-                    /// matched with the current character
-                    if (charStack.isEmpty()) {
-                        // highlight between matching characters ({}, () or [])
-                        curJavaCodeArea.selectRange(idxAfterCharToMatch, i);
-                        return;
-                    }
+//                    if (!parsingString) {
+                        // pop the top opening char off the stack if its closing match is found,
+                        // otherwise push the newly found opening char onto the stack
+                        switch (curChar) {
+                            case ("]"):
+                                if (openingMatchCharacter.equals("[")) charStack.pop();
+                                break;
+                            case (")"):
+                                if (openingMatchCharacter.equals("(")) charStack.pop();
+                                break;
+                            case ("}"):
+                                if (openingMatchCharacter.equals("{")) charStack.pop();
+                                break;
+                            case ("["):
+                                charStack.push(curChar);
+                                break;
+                            case ("("):
+                                charStack.push(curChar);
+                                break;
+                            case ("{"):
+                                charStack.push(curChar);
+                                break;
+                            default:
+                                break;
+                        }
+                        // stack is empty if the originally highlighted character has been
+                        /// matched with the current character
+                        if (charStack.isEmpty()) {
+                            // highlight between matching characters ({}, () or [])
+                            curJavaCodeArea.selectRange(idxAfterCharToMatch, i);
+                            return;
+                        }
+//                    }
                 }
                 System.out.println(Arrays.toString(charStack.toArray()));
                 System.out.println("matching closing character not found");
@@ -260,22 +288,23 @@ public class EditController {
                     closingMatchCharacter = charStack.peek();
 
                     // check that the character is not not written as a string "(" or '('
-                    try {
-                        if (curJavaCodeArea.getText(i - 2, i - 1).equals("\"")
-                                && curJavaCodeArea.getText(i, i + 1).equals("\"")
-                                || curJavaCodeArea.getText(i - 2, i - 1).equals("'")
-                                && curJavaCodeArea.getText(i, i + 1).equals("'")) {
-                            System.out.println("continuing");
-                            continue;
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(e);
-                    }
+//                    try {
+//                        if (curJavaCodeArea.getText(i - 2, i - 1).equals("\"")
+//                                && curJavaCodeArea.getText(i, i + 1).equals("\"")
+//                                || curJavaCodeArea.getText(i - 2, i - 1).equals("'")
+//                                && curJavaCodeArea.getText(i, i + 1).equals("'")) {
+//                            System.out.println("continuing");
+//                            continue;
+//                        }
+//                    } catch (IndexOutOfBoundsException e) {
+//                        System.out.println(e);
+//                    }
 
                     // pop the top opening char off the stack if its closing match is found,
                     // otherwise push the newly found opening char onto the stack
                     // current character being checked for a closing bracket match
                     String curChar = curJavaCodeArea.getText(i - 1, i);
+
                     switch (curChar) {
                         case ("["):
                             if (closingMatchCharacter.equals("]")) charStack.pop();
@@ -449,4 +478,205 @@ public class EditController {
         return (JavaCodeArea) curPane.getContent();
     }
 
+
+    /**
+     * searches for the text entered in the "Find" TextField
+     * shows appropriate error message if nothing found or provided as search string
+     * enables the Previous and Next buttons if more than one match is found
+     */
+    public void handleFindText() {
+
+        String textToFind = this.findTextEntry.getText();
+        int textToFindLength = textToFind.length();
+
+        // check if some text was searched for
+        if (textToFindLength > 0) {
+            System.out.println("textToFind: " + textToFind);
+
+            // get current file's text
+            String openFileText = getCurJavaCodeArea().getText();
+
+            // get index of first match, -1 if no matches
+            int index = openFileText.indexOf(textToFind);
+
+            // check if any match was found
+            if (index != -1) {
+
+                // build list of starting indices
+                this.matchStartingIndices.clear();
+                while (index >= 0) {
+                    this.matchStartingIndices.add(index);
+                    index = openFileText.indexOf(textToFind, index + 1);
+
+                }
+                // print found indices
+                for (Integer idx : this.matchStartingIndices) {
+                    System.out.println("idx: " + idx);
+                }
+                // save text of searched file
+                this.fileTextSearched = openFileText;
+
+                // currently highlighted match is at the first index (0) of the match indices array
+                this.curMatchHighlightedIdx = 0;
+
+                // save length of valid match
+                this.curMatchLength = textToFindLength;
+
+                // get starting index in file of first found match
+                int highlightStartIdx = this.matchStartingIndices.get(0);
+
+                // highlight first found match
+                getCurJavaCodeArea().selectRange(highlightStartIdx,
+                        highlightStartIdx+this.curMatchLength);
+
+                // notify the user of search results
+                showAlert(this.matchStartingIndices.size() + " MATCHES FOUND");
+
+                // enable the Previous and Next buttons if more than 1 match is found
+                if (this.matchStartingIndices.size() > 1) this.setMatchNavButtonsClickable(true);
+
+                return;
+            }
+            resetFindMatchingStringFields();
+            showAlert("NO MATCH FOUND");
+            return;
+        }
+        resetFindMatchingStringFields();
+        showAlert("NOTHING TO SEARCH FOR");
+    }
+
+
+    /**
+     * highlights the previous match if there are multiple matches found in the file
+     */
+    public void handleHighlightPrevMatch() {
+
+        if (this.canHighlightMatches()) {
+
+            JavaCodeArea curJavaCodeArea = getCurJavaCodeArea();
+
+            // if first match highlighted, highlight the last match
+            if (this.curMatchHighlightedIdx == 0) {
+
+                // get index of match located last in file
+                int highlightStartIdx = this.matchStartingIndices.get(
+                        this.matchStartingIndices.size()-1);
+
+                // highlight this last match
+                curJavaCodeArea.selectRange(highlightStartIdx,
+                        highlightStartIdx+this.curMatchLength);
+
+                // update the index of the currently highlighted match
+                this.curMatchHighlightedIdx = this.matchStartingIndices.size()-1;
+            }
+            // otherwise highlight the previous match
+            else {
+                // decrement index of highlighted match
+                this.curMatchHighlightedIdx--;
+
+                // get starting index in file of preceding match
+                int highlightStartIdx = this.matchStartingIndices.get(
+                        this.curMatchHighlightedIdx);
+
+                // highlight match preceding currently highlighted match
+                curJavaCodeArea.selectRange( highlightStartIdx,
+                        highlightStartIdx+this.curMatchLength);
+            }
+            return;
+        }
+    }
+
+    /**
+     *
+     */
+    public void handleHighlightNextMatch() {
+        System.out.println("handlingNext");
+
+
+        if (this.matchStartingIndices.size() == 1) {
+            showAlert("ONLY 1 MATCH");
+            return;
+        }
+        if (this.canHighlightMatches()) {
+
+            System.out.println("highlightingNext");
+            JavaCodeArea curJavaCodeArea = getCurJavaCodeArea();
+
+            // if last match in file highlighted, wrap around to highlight the first match
+            if (this.curMatchHighlightedIdx == this.matchStartingIndices.size()-1) {
+                System.out.println("wrapping back to highlight last match");
+                // get index of match located last in file
+
+                int highlightStartIdx = this.matchStartingIndices.get(0);
+                // highlight the match located first in the file
+                curJavaCodeArea.selectRange(highlightStartIdx,
+                        highlightStartIdx+this.curMatchLength);
+
+                // update the index of the currently highlighted match
+                this.curMatchHighlightedIdx = 0;
+            }
+            // otherwise highlight the previous match
+            else {
+                // increment index of highlighted match
+                this.curMatchHighlightedIdx++;
+
+                // get starting index in file of next match
+                int highlightStartIdx = this.matchStartingIndices.get(
+                        this.curMatchHighlightedIdx);
+
+                // highlight match after currently highlighted match
+                curJavaCodeArea.selectRange(highlightStartIdx,
+                        highlightStartIdx+this.curMatchLength);
+            }
+            return;
+        }
+    }
+
+    /**
+     *
+     * @return true if any matches from Find can currently be highlighted, else false
+     */
+    private boolean canHighlightMatches() {
+        String openFileText = getCurJavaCodeArea().getText();
+        System.out.println("searched: " + this.fileTextSearched);
+        System.out.println("current: " + openFileText);
+
+        // check if anything searched for
+        if (this.fileTextSearched == null || this.curMatchHighlightedIdx == -1
+                || this.curMatchLength == -1) {
+            showAlert("MUST SEARCH FOR SOME TEXT");
+            return false;
+        }
+        // check if any matches found
+        if (this.matchStartingIndices.size() == 0) {
+            showAlert("NO MATCHES TO HIGHLIGHT");
+            return false;
+        }
+        // check if the file has been changed since the last search
+        if (!this.fileTextSearched.equals(openFileText)) {
+            showAlert("FILE HAS BEEN CHANGED SINCE PREVIOUS SEARCH, FIND AGAIN");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * resets the fields used for string searching in the file when no match is found
+     */
+    private void resetFindMatchingStringFields() {
+        this.fileTextSearched = null;
+        this.curMatchLength = -1;
+        this.curMatchHighlightedIdx = -1;
+        this.setMatchNavButtonsClickable(false);
+    }
+
+    /**
+     * enables or disables the Previous and Next match navigation buttons
+     * @param enable boolean denoting whether or not the Previous & Next buttons
+     *               are enabled
+     */
+    private void setMatchNavButtonsClickable(boolean enable) {
+        this.prevMatchBtn.setDisable(!enable);
+        this.nextMatchBtn.setDisable(!enable);
+    }
 }
