@@ -117,7 +117,7 @@ public class EditController {
         curCodeArea.deselect();
 
         // regex to check if current line is commented
-        if (Pattern.matches("(?:\\/\\/.*)", curLineText)) {
+        if (Pattern.matches(" *\\/\\/.*", curLineText)) {
 
             // uncomment the line by taking out the first instance of "//"
             String curLineUncommented =
