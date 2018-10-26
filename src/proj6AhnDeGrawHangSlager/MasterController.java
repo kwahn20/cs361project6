@@ -278,7 +278,7 @@ public class MasterController {
 
 
     @FXML
-    public void handleFind(){}
+    public void handleFind(){ editController.handleFind();}
 
     @FXML
     public void handleDarkMode(){

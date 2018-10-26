@@ -19,6 +19,7 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.NavigationActions.SelectionPolicy;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.Stack;
 
@@ -351,12 +352,16 @@ public class EditController {
 
         } else {
 
-            lines = selectedText.split("\\n");
+            //curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            selectedText = curCodeArea.getSelectedText();
             caretIdx = curCodeArea.getText().indexOf(selectedText);
 
             //moves caret to the front of the selected text
-            curCodeArea.moveTo(caretIdx);
+            curCodeArea.moveTo(caretIdx,SelectionPolicy.ADJUST);
+            curCodeArea.lineStart(SelectionPolicy.EXTEND);
             caretIdx = curCodeArea.getCaretPosition();
+            selectedText = curCodeArea.getSelectedText();
+            lines = selectedText.split("\\n");
         }
 
 
@@ -379,7 +384,9 @@ public class EditController {
 
         //lines is an array of lines separated by a \n character
         String[] lines;
+        //index of the caret
         int caretIdx;
+
         if (selectedText.equals("")) {
             curCodeArea.selectLine();
             selectedText = curCodeArea.getSelectedText();
@@ -388,11 +395,13 @@ public class EditController {
             caretIdx = curCodeArea.getCaretPosition();
             lines = selectedText.split("\\n");
         } else {
-            lines = selectedText.split("\\n");
+
             caretIdx = curCodeArea.getText().indexOf(selectedText);
-            curCodeArea.moveTo(caretIdx);
-            curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            curCodeArea.moveTo(caretIdx,SelectionPolicy.ADJUST);
+            curCodeArea.lineStart(SelectionPolicy.EXTEND);
             caretIdx = curCodeArea.getCaretPosition();
+            selectedText = curCodeArea.getSelectedText();
+            lines = selectedText.split("\\n");
         }
 
 
@@ -439,6 +448,12 @@ public class EditController {
     }
 
 
+    /**
+     * Allows a user to find a word in the opened file
+     *
+     */
+
+    public void handleFind(){}
     /**
      * @return the JavaCodeArea currently in focus of the TabPane
      */
