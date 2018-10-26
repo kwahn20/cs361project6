@@ -282,14 +282,28 @@ public class MasterController {
 
     @FXML
     public void handleDarkMode(){
-        vBox.getStylesheets().add("proj6AhnDeGrawHangSlager/DarkMode.css");
+       handleThemeChange("proj6AhnDeGrawHangSlager/DarkMode.css");
         darkModeMenuItem.setDisable(true);
     }
 
     @FXML
     public void handleNormalMode(){
         vBox.getStylesheets().remove(vBox.getStylesheets().size()-1);
+        System.out.println(vBox.getStylesheets());
         darkModeMenuItem.setDisable(false);
+    }
+
+    @FXML
+    public void handleFunMode(){
+        handleThemeChange("proj6AhnDeGrawHangSlager/FunMode.css");
+    }
+
+    /**
+     * Helper method to change the theme
+     * @param themeCSS
+     */
+    private void handleThemeChange(String themeCSS){
+        vBox.getStylesheets().add(themeCSS);
     }
 
     /**

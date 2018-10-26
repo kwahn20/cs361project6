@@ -37,35 +37,35 @@
 }
 
 .menu-item{
-    -fx-background-color: #737373;
+    -fx-background-color: #ff6666;
 }
 
 .menu-bar{
-    -fx-background-color: #666666;
+    -fx-background-color: #ff944d;
 }
 
 .tab-pane{
-   -fx-background-image: url(rainbowStripes.jpg)
+
 }
 
 .tab{
-    -fx-background-color: #666666;
+     -fx-background-image: url(rainbowStripes.png)
 }
 
 .code-area{
-    -fx-background-color: #404040;
+     -fx-background-image: url(rainbowStripes.png)
 }
 
 .tool-bar{
-    -fx-background-color:#8c8c8c;
+    -fx-background-color:#99ccff;
 }
 .text{
     -fx-fill: white;
+
 }
 
-
 .keyword {
-    -fx-fill: #9966ff;
+    -fx-fill: #dab3ff;
     -fx-font-weight: bold;
 }
 .semicolon {
@@ -84,7 +84,7 @@
     -fx-font-weight: bold;
 }
 .string {
-    -fx-fill: #008ae6;
+    -fx-fill: #00ffff;
 }
 
 .comment {
@@ -95,9 +95,9 @@
     -fx-fill: #ff4d4d;
 }
 .paragraph-box:has-caret {
-    -fx-background-color: #595959;
+    -fx-background-color: #99ccff;
 }
 
 .lineno{
-    -fx-background-color: #262626;
+    -fx-background-color: #3399ff;
 }

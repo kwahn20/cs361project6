@@ -181,8 +181,6 @@ public class EditController {
                     || highlightedText.equals(")")) {
                 findClosingCharacter = false;
             } else {
-                System.out.println("VALID CHARACTER NOT HIGHLIGHTED\n" +
-                        "VALID CHARACTERS ARE '{', '}', '[', ']', '(' or ')'");
                 showAlert("VALID CHARACTER NOT HIGHLIGHTED\n" +
                         "VALID CHARACTERS ARE '{', '}', '[', ']', '(' or ')'");
                 return;
@@ -223,7 +221,6 @@ public class EditController {
                                 && curJavaCodeArea.getText(i + 1, i + 2).equals("\"")
                                 || curJavaCodeArea.getText(i - 1, i).equals("'")
                                 && curJavaCodeArea.getText(i + 1, i + 2).equals("'")) {
-                            System.out.println("continuing");
                             continue;
                         }
                     } catch (IndexOutOfBoundsException e) {
@@ -261,9 +258,7 @@ public class EditController {
                         return;
                     }
                 }
-                System.out.println(Arrays.toString(charStack.toArray()));
-                System.out.println("matching closing character not found");
-                showAlert("MATCHING CLOSING CHARACTER NOT FOUND");
+                showAlert("The matching closing character was not found!");
                 return;
             } else {
                 String closingMatchCharacter;
@@ -280,7 +275,6 @@ public class EditController {
                                 && curJavaCodeArea.getText(i, i + 1).equals("\"")
                                 || curJavaCodeArea.getText(i - 2, i - 1).equals("'")
                                 && curJavaCodeArea.getText(i, i + 1).equals("'")) {
-                            System.out.println("continuing");
                             continue;
                         }
                     } catch (IndexOutOfBoundsException e) {
@@ -322,12 +316,10 @@ public class EditController {
                         return;
                     }
                 }
-                System.out.println("matching opening character not found");
-                showAlert("MATCHING OPENING CHARACTER NOT FOUND");
+                showAlert("The matching opening character was not found!");
                 return;
             }
         } else {
-            System.out.println("must select opening/closing parenthesis/bracket/brace");
             showAlert("VALID CHARACTERS ARE A SINGLE '{', '}', '[', ']', '(' or ')'");
         }
 
@@ -390,10 +382,8 @@ public class EditController {
             lines = selectedText.split("\\n");
         }
 
-        System.out.println("numLines: " + lines.length);
         for (int i = 0; i < lines.length; i++) {
             singleLineTabbing(caretIdx);
-            System.out.println("tabbing line");
 
             // incrementing the caret index by the number of characters
             // in the line and +2 for the new line character at the end
@@ -423,17 +413,30 @@ public class EditController {
             lines = selectedText.split("\\n");
         } else {
 
-            caretIdx = curCodeArea.getText().indexOf(selectedText);
-            curCodeArea.moveTo(caretIdx,SelectionPolicy.ADJUST);
+            //curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            IndexRange highlightedRange = curCodeArea.getSelection();
+
+            //moves caret to the front of the selected text
+            curCodeArea.moveTo(highlightedRange.getStart(),SelectionPolicy.ADJUST);
+
+            // move to front of first highlighted line
             curCodeArea.lineStart(SelectionPolicy.EXTEND);
+
+            // get current caret position
             caretIdx = curCodeArea.getCaretPosition();
+
+            // highlight from beginning of first highlighted line to end of highlighted section
+            curCodeArea.selectRange(caretIdx, highlightedRange.getEnd());
+
+            // get all the highlighted text
             selectedText = curCodeArea.getSelectedText();
+
+            // get list of individual string lines
             lines = selectedText.split("\\n");
         }
 
 
         for (int i = 0; i < lines.length; i++) {
-            curCodeArea.moveTo(caretIdx);
             String curLineText = lines[i];
             singleLineDeTabbing(curLineText, caretIdx);
 
@@ -504,7 +507,6 @@ public class EditController {
 
         // check if some text was searched for
         if (textToFindLength > 0) {
-            System.out.println("textToFind: " + textToFind);
 
             // get current file's text
             String openFileText = getCurJavaCodeArea().getText();
@@ -522,10 +524,7 @@ public class EditController {
                     index = openFileText.indexOf(textToFind, index + 1);
 
                 }
-                // print found indices
-                for (Integer idx : this.matchStartingIndices) {
-                    System.out.println("idx: " + idx);
-                }
+
                 // save text of searched file
                 this.fileTextSearched = openFileText;
 
@@ -604,19 +603,16 @@ public class EditController {
      *
      */
     public void handleHighlightNextMatch() {
-        System.out.println("handlingNext");
 
         if (this.canHighlightMatches()) {
 
-            System.out.println("highlightingNext");
             JavaCodeArea curJavaCodeArea = getCurJavaCodeArea();
 
             // if last match in file highlighted, wrap around to highlight the first match
             if (this.curMatchHighlightedIdx == this.matchStartingIndices.size()-1) {
-                System.out.println("wrapping back to highlight last match");
                 // get index of match located last in file
-
                 int highlightStartIdx = this.matchStartingIndices.get(0);
+
                 // highlight the match located first in the file
                 curJavaCodeArea.selectRange(highlightStartIdx,
                         highlightStartIdx+this.curMatchLength);
@@ -646,8 +642,6 @@ public class EditController {
      */
     private boolean canHighlightMatches() {
         String openFileText = getCurJavaCodeArea().getText();
-        System.out.println("searched: " + this.fileTextSearched);
-        System.out.println("current: " + openFileText);
 
         // check if anything searched for
         if (this.fileTextSearched == null || this.curMatchHighlightedIdx == -1
