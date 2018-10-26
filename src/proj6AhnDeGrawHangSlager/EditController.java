@@ -352,6 +352,7 @@ public class EditController {
         //lines is an array of lines separated by a \n character
         String[] lines;
         int caretIdx;
+        int newCaretIdx;
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         String selectedText = curCodeArea.getSelectedText();
@@ -368,20 +369,31 @@ public class EditController {
         } else {
 
             //curCodeArea.lineStart(SelectionPolicy.ADJUST);
-            selectedText = curCodeArea.getSelectedText();
-            caretIdx = curCodeArea.getText().indexOf(selectedText);
+            IndexRange highlightedRange = curCodeArea.getSelection();
 
             //moves caret to the front of the selected text
-            curCodeArea.moveTo(caretIdx,SelectionPolicy.ADJUST);
+            curCodeArea.moveTo(highlightedRange.getStart(),SelectionPolicy.ADJUST);
+
+            // move to front of first highlighted line
             curCodeArea.lineStart(SelectionPolicy.EXTEND);
+
+            // get current caret position
             caretIdx = curCodeArea.getCaretPosition();
+
+            // highlight from beginning of first highlighted line to end of highlighted section
+            curCodeArea.selectRange(caretIdx, highlightedRange.getEnd());
+
+            // get all the highlighted text
             selectedText = curCodeArea.getSelectedText();
+
+            // get list of individual string lines
             lines = selectedText.split("\\n");
         }
 
-
+        System.out.println("numLines: " + lines.length);
         for (int i = 0; i < lines.length; i++) {
             singleLineTabbing(caretIdx);
+            System.out.println("tabbing line");
 
             // incrementing the caret index by the number of characters
             // in the line and +2 for the new line character at the end
@@ -446,7 +458,7 @@ public class EditController {
 
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
-        // regex to check if current line is commented
+        // regex to check if current line is tabbed
         if (Pattern.matches("(?:[ \\t].*)", curLineText)) {
             // detabs the line by taking out the first instance of a tab
             String curLineUncommented = curLineText.replaceFirst("[ \\t]", "");
