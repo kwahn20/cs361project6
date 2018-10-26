@@ -18,9 +18,10 @@ import javafx.scene.control.*;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.NavigationActions.SelectionPolicy;
+
 import java.util.regex.Pattern;
 import java.util.Stack;
-import javafx.geometry.Bounds;
+
 import java.util.Arrays;
 
 
@@ -28,11 +29,10 @@ import java.util.Arrays;
  * This is the controller class for all of the edit functions
  * within the edit menu.
  *
- * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
- * @author  Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
- *
+ * @author Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
+ * @author Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * @version 3.0
- * @since   10-3-2018
+ * @since 10-3-2018
  */
 public class EditController {
 
@@ -106,7 +106,7 @@ public class EditController {
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         // position caret at start of line
-        curCodeArea.lineStart( SelectionPolicy.ADJUST );
+        curCodeArea.lineStart(SelectionPolicy.ADJUST);
 
         // get caret index location in file
         int caretIdx = curCodeArea.getCaretPosition();
@@ -117,15 +117,15 @@ public class EditController {
         curCodeArea.deselect();
 
         // regex to check if current line is commented
-        if ( Pattern.matches("(?:\\/\\/.*)", curLineText) ) {
+        if (Pattern.matches("(?:\\/\\/.*)", curLineText)) {
 
             // uncomment the line by taking out the first instance of "//"
             String curLineUncommented =
                     curLineText.replaceFirst("//", "");
 
             // replace the current line with the newly commented line
-            curCodeArea.replaceText(caretIdx, caretIdx+curLineText.length(),
-                                                    curLineUncommented);
+            curCodeArea.replaceText(caretIdx, caretIdx + curLineText.length(),
+                    curLineUncommented);
 
             return;
         }
@@ -152,8 +152,7 @@ public class EditController {
         if (highlightedText.isEmpty()) {
             showAlert("Please Highlight a Bracket!");
             return;
-        }
-        else if (highlightedText.length() == 1) {
+        } else if (highlightedText.length() == 1) {
 
             // true if matching a closing character to an opening character,
             // false if matching an opening character to a closing character
@@ -162,12 +161,10 @@ public class EditController {
             if (highlightedText.equals("{") || highlightedText.equals("[")
                     || highlightedText.equals("(")) {
                 findClosingCharacter = true;
-            }
-            else if (highlightedText.equals("}") || highlightedText.equals("]")
+            } else if (highlightedText.equals("}") || highlightedText.equals("]")
                     || highlightedText.equals(")")) {
                 findClosingCharacter = false;
-            }
-            else {
+            } else {
                 System.out.println("VALID CHARACTER NOT HIGHLIGHTED\n" +
                         "VALID CHARACTERS ARE '{', '}', '[', ']', '(' or ')'");
                 showAlert("VALID CHARACTER NOT HIGHLIGHTED\n" +
@@ -202,14 +199,14 @@ public class EditController {
                     openingMatchCharacter = charStack.peek();
 
                     // current character being checked for a closing bracket match
-                    String curChar = curJavaCodeArea.getText(i, i+1);
+                    String curChar = curJavaCodeArea.getText(i, i + 1);
 
                     // check that the character is not not written as a string "(" or '('
                     try {
-                        if (curJavaCodeArea.getText(i-1, i).equals("\"")
-                                && curJavaCodeArea.getText(i+1, i+2).equals("\"")
-                                || curJavaCodeArea.getText(i-1, i).equals("'")
-                                && curJavaCodeArea.getText(i+1, i+2).equals("'")) {
+                        if (curJavaCodeArea.getText(i - 1, i).equals("\"")
+                                && curJavaCodeArea.getText(i + 1, i + 2).equals("\"")
+                                || curJavaCodeArea.getText(i - 1, i).equals("'")
+                                && curJavaCodeArea.getText(i + 1, i + 2).equals("'")) {
                             System.out.println("continuing");
                             continue;
                         }
@@ -219,23 +216,23 @@ public class EditController {
 
                     // pop the top opening char off the stack if its closing match is found,
                     // otherwise push the newly found opening char onto the stack
-                    switch(curChar) {
-                        case("]"):
+                    switch (curChar) {
+                        case ("]"):
                             if (openingMatchCharacter.equals("[")) charStack.pop();
                             break;
-                        case(")"):
+                        case (")"):
                             if (openingMatchCharacter.equals("(")) charStack.pop();
                             break;
-                        case("}"):
+                        case ("}"):
                             if (openingMatchCharacter.equals("{")) charStack.pop();
                             break;
-                        case("["):
+                        case ("["):
                             charStack.push(curChar);
                             break;
-                        case("("):
+                        case ("("):
                             charStack.push(curChar);
                             break;
-                        case("{"):
+                        case ("{"):
                             charStack.push(curChar);
                             break;
                         default:
@@ -253,8 +250,7 @@ public class EditController {
                 System.out.println("matching closing character not found");
                 showAlert("MATCHING CLOSING CHARACTER NOT FOUND");
                 return;
-            }
-            else {
+            } else {
                 String closingMatchCharacter;
                 int idxBeforeCharToMatch = highlightedCharRange.getStart();
                 // search backward through file
@@ -265,10 +261,10 @@ public class EditController {
 
                     // check that the character is not not written as a string "(" or '('
                     try {
-                        if (curJavaCodeArea.getText(i-2, i-1).equals("\"")
-                                && curJavaCodeArea.getText(i, i+1).equals("\"")
-                                || curJavaCodeArea.getText(i-2, i-1).equals("'")
-                                && curJavaCodeArea.getText(i, i+1).equals("'")) {
+                        if (curJavaCodeArea.getText(i - 2, i - 1).equals("\"")
+                                && curJavaCodeArea.getText(i, i + 1).equals("\"")
+                                || curJavaCodeArea.getText(i - 2, i - 1).equals("'")
+                                && curJavaCodeArea.getText(i, i + 1).equals("'")) {
                             System.out.println("continuing");
                             continue;
                         }
@@ -279,24 +275,24 @@ public class EditController {
                     // pop the top opening char off the stack if its closing match is found,
                     // otherwise push the newly found opening char onto the stack
                     // current character being checked for a closing bracket match
-                    String curChar = curJavaCodeArea.getText(i-1, i);
-                    switch(curChar) {
-                        case("["):
+                    String curChar = curJavaCodeArea.getText(i - 1, i);
+                    switch (curChar) {
+                        case ("["):
                             if (closingMatchCharacter.equals("]")) charStack.pop();
                             break;
-                        case("("):
+                        case ("("):
                             if (closingMatchCharacter.equals(")")) charStack.pop();
                             break;
-                        case("{"):
+                        case ("{"):
                             if (closingMatchCharacter.equals("}")) charStack.pop();
                             break;
-                        case("]"):
+                        case ("]"):
                             charStack.push(curChar);
                             break;
-                        case(")"):
+                        case (")"):
                             charStack.push(curChar);
                             break;
-                        case("}"):
+                        case ("}"):
                             charStack.push(curChar);
                             break;
                         default:
@@ -314,8 +310,7 @@ public class EditController {
                 showAlert("MATCHING OPENING CHARACTER NOT FOUND");
                 return;
             }
-        }
-        else {
+        } else {
             System.out.println("must select opening/closing parenthesis/bracket/brace");
             showAlert("VALID CHARACTERS ARE A SINGLE '{', '}', '[', ']', '(' or ')'");
         }
@@ -324,6 +319,7 @@ public class EditController {
 
     /**
      * creates and displays an informational alert
+     *
      * @param header the content of the alert
      */
     private void showAlert(String header) {
@@ -331,56 +327,108 @@ public class EditController {
         a.setHeaderText(header);
         a.show();
     }
+
     /**
-     * Tabs the line of code that the cursor is on
+     * Entabs the selected text
      *
      */
-    public void singleLineTabbing() {
 
+    public void handleEnTabbing() {
+        String[] lines;
+        int caretIdx;
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
-        // position caret at start of line
-        curCodeArea.lineStart( SelectionPolicy.ADJUST );
+        String selectedText = curCodeArea.getSelectedText();
 
-        // get caret index location in file
-        int caretIdx = curCodeArea.getCaretPosition();
+        if (selectedText.equals("")) {
+            curCodeArea.selectLine();
+            selectedText = curCodeArea.getSelectedText();
+            curCodeArea.deselect();
+            curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            caretIdx = curCodeArea.getCaretPosition();
+            lines = selectedText.split("\\n");
+        }
 
-        // temporarily highlight the current line to get its text as a string
-        curCodeArea.selectLine();
-        String curLineText = curCodeArea.getSelectedText();
-        curCodeArea.deselect();
+        else {
+            lines = selectedText.split("\\n");
+            caretIdx = curCodeArea.getText().indexOf(selectedText);
+            //moves caret to the front of the selected text
+            curCodeArea.moveTo(caretIdx);
+            caretIdx = curCodeArea.getCaretPosition();
+        }
 
-        // add a tab at the beginning of the line to indent it
+        for (int i = 0; i < lines.length; i++) {
+            singleLineTabbing(caretIdx);
+
+            // +2 for the new line character
+            caretIdx += lines[i].length() + 2;
+        }
+    }
+
+    /**
+     * Detabs the selected text
+     *
+     */
+
+    public void handleDeTabbing() {
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
+
+        curCodeArea.lineStart(SelectionPolicy.ADJUST);
+        String selectedText = curCodeArea.getSelectedText();
+
+        String[] lines;
+        int caretIdx;
+        if (selectedText.equals("")) {
+            curCodeArea.selectLine();
+            selectedText = curCodeArea.getSelectedText();
+            curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            caretIdx = curCodeArea.getCaretPosition();
+            lines = selectedText.split("\\n");
+        }
+        else {
+            lines = selectedText.split("\\n");
+            caretIdx = curCodeArea.getText().indexOf(selectedText);
+            curCodeArea.moveTo(caretIdx);
+            curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            caretIdx = curCodeArea.getCaretPosition();
+        }
+
+        for (int i = 0; i < lines.length; i++) {
+            curCodeArea.moveTo(caretIdx);
+            String curLineText = lines[i];
+            singleLineDeTabbing(curLineText, caretIdx);
+
+            //+2 for the new line character
+            caretIdx += lines[i].length() + 2;
+        }
+
+    }
+
+    /**
+     * Entabs a single line
+     */
+    private void singleLineTabbing(int caretIdx) {
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
         curCodeArea.replaceText(caretIdx, caretIdx, "\t");
     }
 
     /**
-     * Detabs the line of code that the cursor is on
-     *
+     * Detabs a single line
      */
-    public void singleLineUntabbing() {
+    private void singleLineDeTabbing(String curLineText, int caretIdx) {
 
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
-        // position caret at start of line
-        curCodeArea.lineStart( SelectionPolicy.ADJUST );
-
-        // get caret index location in file
-        int caretIdx = curCodeArea.getCaretPosition();
-
-        // temporarily highlight the current line to get its text as a string
-        curCodeArea.selectLine();
-        String curLineText = curCodeArea.getSelectedText();
-        curCodeArea.deselect();
-
         // regex to check if current line is commented
-        if ( Pattern.matches("(?:[ \\t].*)", curLineText) ) {
-
+        if (Pattern.matches("(?:[ \\t].*)", curLineText)) {
             // detabs the line by taking out the first instance of a tab
             String curLineUncommented = curLineText.replaceFirst("[ \\t]", "");
 
+            curCodeArea.moveTo(caretIdx);
+            curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            caretIdx = curCodeArea.getCaretPosition();
             // replace the current line with the newly commented line
-            curCodeArea.replaceText(caretIdx, caretIdx+curLineText.length(),
+            curCodeArea.replaceText(caretIdx, caretIdx + curLineText.length(),
                     curLineUncommented);
             return;
         }
@@ -388,14 +436,13 @@ public class EditController {
 
 
     /**
-     *
      * @return the JavaCodeArea currently in focus of the TabPane
      */
     public JavaCodeArea getCurJavaCodeArea() {
         Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
         VirtualizedScrollPane<CodeArea> curPane =
                 (VirtualizedScrollPane<CodeArea>) curTab.getContent();
-        return (JavaCodeArea)curPane.getContent();
+        return (JavaCodeArea) curPane.getContent();
     }
 
 }

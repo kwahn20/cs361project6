@@ -84,11 +84,11 @@ public class MasterController {
     }
 
     @FXML public void handleTabbing() {
-        editController.singleLineTabbing();
+        editController.handleEnTabbing();
     }
 
     @FXML public void handleUnTabbing() {
-        editController.singleLineUntabbing();
+        editController.handleDeTabbing();
     }
 
     private void callProperCompileMethod(String compileMethod) throws InterruptedException{
