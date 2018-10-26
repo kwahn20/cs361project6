@@ -330,15 +330,16 @@ public class EditController {
 
     /**
      * Entabs the selected text
-     *
      */
 
     public void handleEnTabbing() {
+        //lines is an array of lines separated by a \n character
         String[] lines;
         int caretIdx;
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         String selectedText = curCodeArea.getSelectedText();
+
 
         if (selectedText.equals("")) {
             curCodeArea.selectLine();
@@ -347,45 +348,46 @@ public class EditController {
             curCodeArea.lineStart(SelectionPolicy.ADJUST);
             caretIdx = curCodeArea.getCaretPosition();
             lines = selectedText.split("\\n");
-        }
 
-        else {
+        } else {
+
             lines = selectedText.split("\\n");
             caretIdx = curCodeArea.getText().indexOf(selectedText);
+
             //moves caret to the front of the selected text
             curCodeArea.moveTo(caretIdx);
             caretIdx = curCodeArea.getCaretPosition();
         }
 
+
         for (int i = 0; i < lines.length; i++) {
             singleLineTabbing(caretIdx);
 
-            // +2 for the new line character
+            // incrementing the caret index by the number of characters
+            // in the line and +2 for the new line character at the end
             caretIdx += lines[i].length() + 2;
         }
     }
 
     /**
      * Detabs the selected text
-     *
      */
 
     public void handleDeTabbing() {
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
-
-        curCodeArea.lineStart(SelectionPolicy.ADJUST);
         String selectedText = curCodeArea.getSelectedText();
 
+        //lines is an array of lines separated by a \n character
         String[] lines;
         int caretIdx;
         if (selectedText.equals("")) {
             curCodeArea.selectLine();
             selectedText = curCodeArea.getSelectedText();
+            curCodeArea.deselect();
             curCodeArea.lineStart(SelectionPolicy.ADJUST);
             caretIdx = curCodeArea.getCaretPosition();
             lines = selectedText.split("\\n");
-        }
-        else {
+        } else {
             lines = selectedText.split("\\n");
             caretIdx = curCodeArea.getText().indexOf(selectedText);
             curCodeArea.moveTo(caretIdx);
@@ -393,15 +395,16 @@ public class EditController {
             caretIdx = curCodeArea.getCaretPosition();
         }
 
+
         for (int i = 0; i < lines.length; i++) {
             curCodeArea.moveTo(caretIdx);
             String curLineText = lines[i];
             singleLineDeTabbing(curLineText, caretIdx);
 
-            //+2 for the new line character
+            // incrementing the caret index by the number of characters
+            // in the line and +2 for the new line character at the end
             caretIdx += lines[i].length() + 2;
         }
-
     }
 
     /**
@@ -427,6 +430,7 @@ public class EditController {
             curCodeArea.moveTo(caretIdx);
             curCodeArea.lineStart(SelectionPolicy.ADJUST);
             caretIdx = curCodeArea.getCaretPosition();
+
             // replace the current line with the newly commented line
             curCodeArea.replaceText(caretIdx, caretIdx + curLineText.length(),
                     curLineUncommented);
