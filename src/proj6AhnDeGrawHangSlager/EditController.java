@@ -476,12 +476,6 @@ public class EditController {
 
 
     /**
-     * Allows a user to find a word in the opened file
-     *
-     */
-
-    public void handleFind(){}
-    /**
      * @return the JavaCodeArea currently in focus of the TabPane
      */
     public JavaCodeArea getCurJavaCodeArea() {

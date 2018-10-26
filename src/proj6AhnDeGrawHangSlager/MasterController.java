@@ -279,8 +279,7 @@ public class MasterController {
     public void handleSelectAll() {
         editController.handleSelectAll(); }
 
-    @FXML
-    public void handleFind(){ editController.handleFind();}
+
 
     @FXML
     public void handleDarkMode(){
