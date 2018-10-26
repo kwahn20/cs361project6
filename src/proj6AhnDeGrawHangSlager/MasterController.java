@@ -176,7 +176,7 @@ public class MasterController {
      */
     @FXML public void handleNew() {
         fileController.handleNew();
-        if(!toolbarController.getTaskStatus()) {
+        if(!toolbarController.getTaskStatus() && this.tabPane.getTabs().size() > 0) {
             toolbarController.enableCompileAndRunButtons();
         }
     }
@@ -189,7 +189,7 @@ public class MasterController {
      */
     @FXML public void handleOpen() {
         fileController.handleOpen();
-        if(!toolbarController.getTaskStatus()) {
+        if(!toolbarController.getTaskStatus() && this.tabPane.getTabs().size() > 0) {
             toolbarController.enableCompileAndRunButtons();
         }
     }
