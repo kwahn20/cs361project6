@@ -33,7 +33,7 @@
 }
 
 #console{
-    -fx-background-image: "proj6AhnDeGrawHangSlager/polkadot.jpg"
+    -fx-background-image: url(polkadot.jpg)
 }
 
 .menu-item{
@@ -45,7 +45,7 @@
 }
 
 .tab-pane{
-    -fx-background-color: #737373;
+   -fx-background-image: url(rainbowStripes.jpg)
 }
 
 .tab{
