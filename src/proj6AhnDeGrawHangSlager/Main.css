@@ -64,6 +64,21 @@
     -fx-fill: firebrick;
 }
 
+.err {
+    -fx-fill: red;
+}
+
+.inp {
+    -fx-fill: blue;
+}
+
+.cons {
+    -fx-fill: green;
+}
+
+.normal{
+    -fx-fill: black;
+}
 .paragraph-box:has-caret {
     -fx-background-color: #f2f9fc;
 }
