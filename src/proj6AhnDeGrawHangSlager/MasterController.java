@@ -47,6 +47,7 @@ public class MasterController {
     @FXML private MenuItem darkModeMenuItem;
     @FXML private MenuItem normalModeMenuItem;
     @FXML private MenuItem funModeMenuItem;
+    @FXML private MenuItem hallowThemeItem;
     @FXML private Console console;
     @FXML private Button stopButton;
     @FXML private Button compileButton;
@@ -289,7 +290,7 @@ public class MasterController {
     @FXML
     public void handleNormalMode(){
         vBox.getStylesheets().remove(vBox.getStylesheets().size()-1);
-        enableNecessaryMenuItems(normalModeMenuItem);
+        enableUnselectedThemes(normalModeMenuItem);
     }
 
     @FXML
@@ -310,10 +311,10 @@ public class MasterController {
             vBox.getStylesheets().remove(vBox.getStylesheets().size()-1);
         }
         vBox.getStylesheets().add(themeCSS);
-        enableNecessaryMenuItems(menuItem);
+        enableUnselectedThemes(menuItem);
     }
 
-    private void enableNecessaryMenuItems(MenuItem menItem){
+    private void enableUnselectedThemes(MenuItem menItem){
         for(MenuItem item: prefMenu.getItems()){
             if(!item.equals(menItem)){
                 item.setDisable(false);
