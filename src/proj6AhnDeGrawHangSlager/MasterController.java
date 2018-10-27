@@ -46,6 +46,7 @@ public class MasterController {
     @FXML private MenuItem closeMenuItem;
     @FXML private MenuItem darkModeMenuItem;
     @FXML private MenuItem normalModeMenuItem;
+    @FXML private MenuItem funModeMenuItem;
     @FXML private Console console;
     @FXML private Button stopButton;
     @FXML private Button compileButton;
@@ -54,6 +55,7 @@ public class MasterController {
     @FXML private Button findPrevBtn;
     @FXML private Button findNextBtn;
     @FXML private TextField replaceTextEntry;
+    @FXML private Menu prefMenu;
 
 
     private EditController editController;
@@ -70,7 +72,6 @@ public class MasterController {
         saveMenuItem.disableProperty().bind(listProperty.emptyProperty());
         saveAsMenuItem.disableProperty().bind(listProperty.emptyProperty());
         closeMenuItem.disableProperty().bind(listProperty.emptyProperty());
-        normalModeMenuItem.disableProperty().bind(darkModeMenuItem.disableProperty().not());
         disableToolbar();
     }
 
@@ -282,28 +283,41 @@ public class MasterController {
 
     @FXML
     public void handleDarkMode(){
-       handleThemeChange("proj6AhnDeGrawHangSlager/DarkMode.css");
-        darkModeMenuItem.setDisable(true);
+       handleThemeChange("proj6AhnDeGrawHangSlager/DarkMode.css", darkModeMenuItem);
     }
 
     @FXML
     public void handleNormalMode(){
         vBox.getStylesheets().remove(vBox.getStylesheets().size()-1);
-        System.out.println(vBox.getStylesheets());
-        darkModeMenuItem.setDisable(false);
+        enableNecessaryMenuItems(normalModeMenuItem);
     }
 
     @FXML
     public void handleFunMode(){
-        handleThemeChange("proj6AhnDeGrawHangSlager/FunMode.css");
+        handleThemeChange("proj6AhnDeGrawHangSlager/FunMode.css", funModeMenuItem);
     }
 
     /**
      * Helper method to change the theme
      * @param themeCSS
      */
-    private void handleThemeChange(String themeCSS){
+    private void handleThemeChange(String themeCSS, MenuItem menuItem){
+        if(vBox.getStylesheets().size() > 1){
+            vBox.getStylesheets().remove(vBox.getStylesheets().size()-1);
+        }
         vBox.getStylesheets().add(themeCSS);
+        enableNecessaryMenuItems(menuItem);
+    }
+
+    private void enableNecessaryMenuItems(MenuItem menItem){
+        for(MenuItem item: prefMenu.getItems()){
+            if(!item.equals(menItem)){
+                item.setDisable(false);
+            }
+            else{
+                item.setDisable(true);
+            }
+        }
     }
 
     /**

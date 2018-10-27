@@ -1,14 +1,15 @@
 /**
  * File: DarkMode.css
- * Names: Matt Jones, Kevin Zhou, Kevin Ahn, Jackie Hang
+ * Names: Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * Class: CS 361
- * Project 4
- * Date: October 2, 2018
+ * Project 6
+ * Date: October 28, 2018
  */
 
 #vBox{
     -fx-background-color: #404040;
 }
+
 #compileButton {
     -fx-font: 13 arial;
     -fx-base: #3399ff;
@@ -30,10 +31,15 @@
 #tabPane {
     -pref-height: 200px;
     -pref-width: 200px;
+    -fx-background-image: url(rainbowCopy.jpg)
+}
+
+.button{
+    -fx-base: #ffcc00;
 }
 
 #console{
-    -fx-background-image: url(polkadot.jpg)
+    -fx-background-image: url(rainbow.jpg)
 }
 
 .menu-item{
@@ -44,12 +50,8 @@
     -fx-background-color: #ff944d;
 }
 
-.tab-pane{
-
-}
-
 .tab{
-     -fx-background-image: url(rainbowStripes.png)
+     -fx-background-color: #ff5050;
 }
 
 .code-area{
@@ -59,6 +61,7 @@
 .tool-bar{
     -fx-background-color:#99ccff;
 }
+
 .text{
     -fx-fill: white;
 
@@ -72,15 +75,15 @@
     -fx-font-weight: bold;
 }
 .paren {
-    -fx-fill: teal;
+    -fx-fill: #ffcc00;
     -fx-font-weight: bold;
 }
 .bracket {
-    -fx-fill: teal;
+    -fx-fill: #ffcc00;
     -fx-font-weight: bold;
 }
 .brace {
-    -fx-fill: teal;
+    -fx-fill: #ffcc00;
     -fx-font-weight: bold;
 }
 .string {
@@ -95,7 +98,7 @@
     -fx-fill: #ff4d4d;
 }
 .paragraph-box:has-caret {
-    -fx-background-color: #99ccff;
+    -fx-background-color: #3399ff;
 }
 
 .lineno{
