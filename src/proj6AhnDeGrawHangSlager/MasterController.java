@@ -47,6 +47,7 @@ public class MasterController {
     @FXML private MenuItem darkModeMenuItem;
     @FXML private MenuItem normalModeMenuItem;
     @FXML private MenuItem funModeMenuItem;
+    @FXML private MenuItem hallowThemeItem;
     @FXML private Console console;
     @FXML private Button stopButton;
     @FXML private Button compileButton;
