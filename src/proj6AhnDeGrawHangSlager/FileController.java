@@ -145,10 +145,10 @@ public class FileController {
             if (saveStatus.get(curTab))
                 this.closeTab();
             else
-                this.askSaveAndClose(curTab.getText(),event);
+                this.askSaveAndClose(event);
         } else {
             if(!filenames.isEmpty()) {
-                this.askSaveAndClose(curTab.getText(),event);
+                this.askSaveAndClose(event);
             }
         }
     }
@@ -219,9 +219,9 @@ public class FileController {
      * the current file or not.
      * Used by handleClose.
      *
-     * @param filename The filename of the file to be saved (or not) at the user's discretion
+     * @param event the tab closing event that may be consumed
      */
-    private void askSaveAndClose(String filename,Event event) {
+    private void askSaveAndClose(Event event) {
         ShowSaveOptionAlert saveOptions = new ShowSaveOptionAlert();
         Optional<ButtonType> result = saveOptions.getUserSaveDecision();
 

@@ -222,8 +222,8 @@ public class EditController {
                     } catch (IndexOutOfBoundsException e) {
                         throw(e);
                     }
-                    // pop the top opening char off the stack if its closing match is found,
-                    // otherwise push the newly found opening char onto the stack
+                    /* pop the top opening char off the stack if its closing match is found,
+                     * otherwise push the newly found opening char onto the stack */
                     switch (curChar) {
                         case ("]"):
                             if (openingMatchCharacter.equals("[")) charStack.pop();
@@ -340,7 +340,6 @@ public class EditController {
         //lines is an array of lines separated by a \n character
         String[] lines;
         int caretIdx;
-
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         String selectedText = curCodeArea.getSelectedText();
@@ -478,20 +477,6 @@ public class EditController {
 
 
     /**
-     * @return the JavaCodeArea currently in focus of the TabPane
-     */
-    public JavaCodeArea getCurJavaCodeArea() {
-
-        if (this.tabPane.getTabs().size() == 0) return null;
-
-        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
-        VirtualizedScrollPane<CodeArea> curPane =
-                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
-        return (JavaCodeArea) curPane.getContent();
-    }
-
-
-    /**
      * searches for the text entered in the "Find" TextField
      * shows appropriate error message if nothing found or provided as search string
      * enables the Previous and Next buttons if more than one match is found
@@ -552,7 +537,10 @@ public class EditController {
                 }
 
                 // enable the Previous and Next buttons if more than 1 match is found
-                if (this.matchStartingIndices.size() > 1) this.setMatchNavButtonsClickable(true);
+                if (this.matchStartingIndices.size() > 1) {
+                    this.setMatchNavButtonsClickable(true);
+                }
+                else this.setMatchNavButtonsClickable(false);
 
                 return;
             }
@@ -566,7 +554,8 @@ public class EditController {
 
 
     /**
-     * highlights the previous match if there are multiple matches found in the file
+     * highlights the match preceding the currently highlighted match if there are
+     * multiple matches found in the file
      */
     public void handleHighlightPrevMatch() {
 
@@ -675,6 +664,7 @@ public class EditController {
         // check if the file has been changed since the last search
         if (!this.fileTextSearched.equals(openFileText)) {
             showAlert("FILE HAS BEEN CHANGED SINCE PREVIOUS SEARCH, FIND AGAIN");
+            setMatchNavButtonsClickable(false);
             return false;
         }
         return true;
@@ -707,8 +697,8 @@ public class EditController {
     public void handleReplaceText() {
 
 
-        // check that there was a valid search & file has not been changed since last search
-        if (this.canHighlightMatches()) { // OR if (getCurJavaCodeArea.getSelected().length() > 0) {
+        // check that there were matches & the file has not been changed since last search
+        if (this.canHighlightMatches()) {
 
             String textToReplaceMatch = this.replaceTextEntry.getText();
 
@@ -723,13 +713,27 @@ public class EditController {
 
                 // replace current highlighted mach with the replaced text
                 getCurJavaCodeArea().replaceText(curHighlightedMatchStartingIdx,
-                        curHighlightedMatchStartingIdx+this.curMatchLength, textToReplaceMatch);
-                // call find method to update the indices of the found matches to account for the changed text
+                        curHighlightedMatchStartingIdx+this.curMatchLength,
+                        textToReplaceMatch);
+                /* call find method to update the indices of the found matches
+                 * to account for the changed text */
                 this.handleFindText(false);
                 return;
             }
             showAlert("ENTER REPLACEMENT TEXT");
         }
+    }
 
+    /**
+     * @return the JavaCodeArea currently in focus of the TabPane
+     */
+    public JavaCodeArea getCurJavaCodeArea() {
+
+        if (this.tabPane.getTabs().size() == 0) return null;
+
+        Tab curTab = this.tabPane.getSelectionModel().getSelectedItem();
+        VirtualizedScrollPane<CodeArea> curPane =
+                (VirtualizedScrollPane<CodeArea>) curTab.getContent();
+        return (JavaCodeArea) curPane.getContent();
     }
 }
