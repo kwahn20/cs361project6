@@ -27,8 +27,8 @@ public class ShowSaveOptionAlert {
      * whether or not they want to save the file that is open
      *
      * @author  Kevin Ahn, Lucas Degraw, Jackie Hang, Kyle Slager
-     * @version 2.0
-     * @since   10-3-2018
+     * @version 1.0
+     * @since   10-26-2018
      *
      */
     public ShowSaveOptionAlert() {

@@ -28,9 +28,9 @@ import java.util.concurrent.*;
  * Specifically, the compile, compile and run, and stop buttons
  *
  * @author  Kevin Ahn, Jackie Hang, Matt Jones, Kevin Zhou
- * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou
+ * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
  * @version 2.0
- * @since   10-3-2018
+ * @since   10-26-2018
  *
  */
 public class ToolbarController {
