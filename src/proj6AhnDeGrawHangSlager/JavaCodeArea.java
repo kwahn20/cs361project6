@@ -129,7 +129,7 @@ class JavaStyle {
                                                             matcher.group("COMMENT") != null ? "comment" :
                                                                     matcher.group("IDENTIFIER") != null ? "identifier" :
                                                                             matcher.group("INTCONST") != null ? "intconst" :
-                                                                                    null; /* never happens */
+                                                                                        null; /* never happens */
             assert styleClass != null;
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());

@@ -94,6 +94,21 @@
 .intconst {
     -fx-fill: #ff4d4d;
 }
+.err {
+    -fx-fill: red;
+}
+
+.inp {
+    -fx-fill: lightblue;
+}
+
+.cons {
+    -fx-fill: lightgreen;
+}
+
+.normal{
+    -fx-fill: white;
+}
 .paragraph-box:has-caret {
     -fx-background-color: #595959;
 }

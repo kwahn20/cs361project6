@@ -14,6 +14,8 @@
 package proj6AhnDeGrawHangSlager;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 /**
  * This class is used to support console functionality.
@@ -50,15 +52,30 @@ public class Console extends StyleClassedTextArea {
         return lines[newLineIndex]+"\n";
     }
 
+    public int curLength(int len, int newLineLength){
+        return len + newLineLength;
+    }
+
     /**
      * Adds a new, separate line of text to this console.
      * Used in ToolbarController when printing to the console.
      * @param newLine the string to add to the new line
      */
-    public void WriteLineToConsole(String newLine){
+    public void WriteLineToConsole(String newLine, String strType){
         String separator = System.getProperty("line.separator");
+        int len = newLine.length();
         this.appendText(newLine);
         this.appendText(separator);
+        if(strType == "ERROR"){
+            this.setStyleClass(this.getText().length() - len - 1, this.getText().length(), "err");
+        }
+        else if(strType == "INPUT"){
+            this.setStyleClass(this.getText().length() - len - 1, this.getText().length(), "inp");
+        }
+        else if(strType == "CONS"){
+            this.setStyleClass(this.getText().length() - len - 1, this.getText().length(), "cons");
+        }
+        this.setStyleClass(this.getText().length(),this.getText().length(), "normal");
         this.moveTo(this.getText().length());
         this.requestFollowCaret();
     }

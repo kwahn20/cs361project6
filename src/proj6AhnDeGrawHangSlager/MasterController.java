@@ -357,4 +357,14 @@ public class MasterController {
     @FXML
     public void handleReplaceText() {editController.handleReplaceText(); }
 
+    @FXML
+    public void handleFocusOnFindTextEntry() {
+        this.findTextEntry.requestFocus();
+    }
+
+    @FXML
+    public void handleFocusOnReplaceTextEntry() {
+        this.replaceTextEntry.requestFocus();
+    }
+
 }

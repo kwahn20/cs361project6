@@ -61,7 +61,9 @@
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll"
                       text="Select All" accelerator="Shortcut+A"/>
             <MenuItem mnemonicParsing="false" onAction="#handleMatchBracketOrParen" text="Match Bracket/Parenthesis" accelerator="Shortcut+M"/>
-            <MenuItem mnemonicParsing="false" onAction="#handleFindText" text="Find" accelerator="Shortcut+F"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleFocusOnFindTextEntry" text="Go To Find" accelerator="Shortcut+F"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleFocusOnReplaceTextEntry" text="Go To Replace" accelerator="Shortcut+R" />
+
         </Menu>
         <Menu fx:id="prefMenu" mnemonicParsing="false" text="Preferences">
             <MenuItem fx:id="normalModeMenuItem" mnemonicParsing="false" onAction="#handleNormalMode"
