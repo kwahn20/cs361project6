@@ -296,7 +296,11 @@ public class MasterController {
     public void handleFunMode(){
         handleThemeChange("proj6AhnDeGrawHangSlager/FunMode.css", funModeMenuItem);
     }
-
+ 
+    @FXML
+    public void handleHallowThemeMode(){
+        handleThemeChange("proj6AhnDeGrawHangSlager/HallowTheme.css", hallowThemeItem);
+    }
     /**
      * Helper method to change the theme
      * @param themeCSS
