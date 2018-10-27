@@ -23,9 +23,10 @@ import javafx.beans.value.ObservableValue;
  * It can also be used to check whether user input been given,
  * and what the command string was.
  *
- * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou
+ * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
+ * @author  Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * @version 1.0
- * @since   10-12-2018
+ * @since   10-26-2018
  *
  */
 public class Console extends StyleClassedTextArea {
@@ -52,9 +53,6 @@ public class Console extends StyleClassedTextArea {
         return lines[newLineIndex]+"\n";
     }
 
-    public int curLength(int len, int newLineLength){
-        return len + newLineLength;
-    }
 
     /**
      * Adds a new, separate line of text to this console.

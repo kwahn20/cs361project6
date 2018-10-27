@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * This class is the controller for all of the toolbar functionality.
  * Specifically the compile, compile and run, and stop buttons
  *
- * @author  Kevin Ahn, Jackie Hang, Matt Jones, Kevin Zhou
+ * @author  Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou
  * @version 2.0
  * @since   10-3-2018

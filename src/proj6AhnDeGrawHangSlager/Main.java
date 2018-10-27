@@ -25,8 +25,8 @@ import java.lang.Exception;
  * basic IDE in which the user can edit/save files with as many tabs as they prefer.
  *
  *
- * @author  Matt Jones, Kevin Zhou, Kevin Ahn, Jackie Hang
- * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou
+ * @author  Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
+ * @author  Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
  * @version 5.0
  * @since   09-30-2018
  */

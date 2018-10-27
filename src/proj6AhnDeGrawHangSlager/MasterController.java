@@ -58,7 +58,6 @@ public class MasterController {
     @FXML private TextField replaceTextEntry;
     @FXML private Menu prefMenu;
 
-
     private EditController editController;
     private FileController fileController;
     private ToolbarController toolbarController;
@@ -85,19 +84,36 @@ public class MasterController {
         toolbarController.handleUserKeypress(ke);
     }
 
-
+    /**
+     * Calls toggleSingleComment from the Edit Controller
+     *
+     */
     @FXML public void handleCommenting() {
         editController.toggleSingleLineComment();
     }
 
-    @FXML public void handleTabbing() {
+    /**
+     * Calls handleEnTabbing from the Edit Controller
+     *
+     */
+    @FXML public void handleEnTabbing() {
         editController.handleEnTabbing();
     }
 
-    @FXML public void handleUnTabbing() {
+    /**
+     * Calls handleDeTabbing from the Edit Controller
+     *
+     */
+    @FXML public void handleDeTabbing() {
         editController.handleDeTabbing();
     }
 
+    /**
+     * Helper method that calls either Compile or Compile and Run
+     * @param compileMethod a String the consists of either "handleCompile" or
+     *                      "handleCompileAndRun"
+     * @throws InterruptedException
+     */
     private void callProperCompileMethod(String compileMethod) throws InterruptedException{
         if (compileMethod.equals("handleCompile")) {
             toolbarController.handleCompile(fileController.getFileName());
@@ -107,6 +123,13 @@ public class MasterController {
         }
     }
 
+    /**
+     * Helper method that checks if user wants to save a file before
+     * compiling their code- It also calls the necessary compile method
+     * @param compileMethod  a String the consists of either "handleCompile" or
+     *                      "handleCompileAndRun"
+     * @throws InterruptedException
+     */
     private void compileHelper(String compileMethod) throws InterruptedException{
         toolbarController.disableCompileAndRunButtons();
         if(!fileController.getSaveStatus()) {
@@ -282,22 +305,36 @@ public class MasterController {
     public void handleSelectAll() {
         editController.handleSelectAll(); }
 
+    /**
+     * Changes the theme of the IDE to Dark
+     */
     @FXML
     public void handleDarkMode(){
        handleThemeChange("proj6AhnDeGrawHangSlager/DarkMode.css", darkModeMenuItem);
     }
 
+    /**
+     * Changes the theme of the IDE back to normal
+     */
     @FXML
     public void handleNormalMode(){
         vBox.getStylesheets().remove(vBox.getStylesheets().size()-1);
         enableUnselectedThemes(normalModeMenuItem);
     }
 
+    /**
+     * Changes the theme of the IDE to Fun Mode
+     */
     @FXML
     public void handleFunMode(){
         handleThemeChange("proj6AhnDeGrawHangSlager/FunMode.css", funModeMenuItem);
     }
- 
+
+
+    /**
+     * Changes the theme of the IDE to HallowTheme--
+     * a fun Halloween extra!
+     */
     @FXML
     public void handleHallowThemeMode(){
         handleThemeChange("proj6AhnDeGrawHangSlager/HallowTheme.css", hallowThemeItem);
@@ -314,6 +351,13 @@ public class MasterController {
         enableUnselectedThemes(menuItem);
     }
 
+    /**
+     * Enables the menu items of themes that aren't currently used and
+     * disables the menu item of the theme that is currently on
+     * display
+     *
+     * @param menItem the menu item that needs to be disabled
+     */
     private void enableUnselectedThemes(MenuItem menItem){
         for(MenuItem item: prefMenu.getItems()){
             if(!item.equals(menItem)){
@@ -334,34 +378,55 @@ public class MasterController {
         this.stopButton.setDisable(true);
     }
 
+    /**
+     * Calls handleMatchBracketOrParen() of the editController
+     */
     @FXML
     public void handleMatchBracketOrParen() {
         editController.handleMatchBracketOrParen();
     }
 
+    /**
+     * Calls handleFindText() of the editController
+     */
     @FXML
     public void handleFindText() {
         editController.handleFindText(true);
     }
 
+    /**
+     * Calls handleHighlightPrevMatch() of the editController
+     */
     @FXML
     public void handleHighlightPrevMatch() {
         editController.handleHighlightPrevMatch();
     }
 
+    /**
+     * Calls handleHighlightNextMatch() of the editController
+     */
     @FXML
     public void handleHighlightNextMatch() {
         editController.handleHighlightNextMatch();
     }
 
+    /**
+     * Calls handleReplaceText() of the editController
+     */
     @FXML
     public void handleReplaceText() {editController.handleReplaceText(); }
 
+    /**
+     * Focuses on the Find Text Entry Box
+     */
     @FXML
     public void handleFocusOnFindTextEntry() {
         this.findTextEntry.requestFocus();
     }
 
+    /**
+     * Focuses on the Replace Text Extry Box
+     */
     @FXML
     public void handleFocusOnReplaceTextEntry() {
         this.replaceTextEntry.requestFocus();

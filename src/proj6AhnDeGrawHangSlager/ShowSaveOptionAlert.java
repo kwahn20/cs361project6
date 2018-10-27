@@ -4,12 +4,8 @@
  * Class: CS 361
  * Project 6
  * Date: October 26, 2018
- * ---------------------------
- * Edited From: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
- * Project 5
- * Date: October 12, 2018
- *
- */
+*/
+
 
 package proj6AhnDeGrawHangSlager;
 
@@ -26,6 +22,15 @@ public class ShowSaveOptionAlert {
     private ButtonType noButton;
     private ButtonType cancelButton;
 
+    /**
+     * This class is used to create an alert that asks the user
+     * whether or not they want to save the file that is open
+     *
+     * @author  Kevin Ahn, Lucas Degraw, Jackie Hang, Kyle Slager
+     * @version 2.0
+     * @since   10-3-2018
+     *
+     */
     public ShowSaveOptionAlert() {
 
         // create the alert
@@ -42,19 +47,38 @@ public class ShowSaveOptionAlert {
         this.alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
     }
 
+    /**
+     * Gets the user's decision
+     *
+     * @return Optional<ButtonType> the button that the user chose
+     */
     public Optional<ButtonType> getUserSaveDecision() {
 
         return this.alert.showAndWait();
     }
 
+    /**
+     * Returns the Yes ButtonType
+     *
+     * @return a ButtonType
+     */
     public ButtonType getYesButton() {
         return this.yesButton;
     }
 
+    /**
+     * Returns the no ButtonType
+     *
+     * @return a ButtonType
+     */
     public ButtonType getNoButton() {
         return this.noButton;
     }
 
+    /**
+     * Returns the Cancel ButtonType
+     * @return a ButtonType
+     */
     public ButtonType getCancelButton() {
         return this.cancelButton;
     }

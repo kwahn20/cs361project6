@@ -22,7 +22,6 @@ import org.fxmisc.richtext.NavigationActions.SelectionPolicy;
 import java.util.regex.Pattern;
 import java.util.Stack;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 
 
@@ -33,7 +32,7 @@ import java.util.ArrayList;
  * @author Zena Abulhab, Paige Hanssen, Kyle Slager Kevin Zhou (Project 5)
  * @author Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * @version 3.0
- * @since 10-3-2018
+ * @since 10-26-2018
  */
 public class EditController {
 
@@ -198,8 +197,6 @@ public class EditController {
             // get the indices of the highlighted character within the file
             IndexRange highlightedCharRange = curJavaCodeArea.getSelection();
 
-            // TODO: account for opening/closing characters in commented lines
-            // TODO: account for opening/closing characters within a string not limited to "{" or '{'
             if (findClosingCharacter) {
 
                 String openingMatchCharacter;
@@ -343,7 +340,7 @@ public class EditController {
         //lines is an array of lines separated by a \n character
         String[] lines;
         int caretIdx;
-        int newCaretIdx;
+
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         String selectedText = curCodeArea.getSelectedText();
@@ -596,7 +593,7 @@ public class EditController {
     }
 
     /**
-     *
+     * Highlights the next matched word available
      */
     public void handleHighlightNextMatch() {
 

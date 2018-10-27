@@ -1,11 +1,11 @@
 /*
  * File: ToolbarController.java
- * Names: Kevin Ahn, Matt Jones, Jackie Hang, Kevin Zhou
+ * Names: Kevin Ahn, Lucas DeGraw, Jackie Hang, Kyle Slager
  * Class: CS 361
- * Project 4
- * Date: October 2, 2018
+ * Project 6
+ * Date: October 26, 2018
  * ---------------------------
- * Edited By: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
+ * Edited From: Zena Abulhab, Paige Hanssen, Kyle Slager, Kevin Zhou
  * Project 5
  * Date: October 12, 2018
  */
