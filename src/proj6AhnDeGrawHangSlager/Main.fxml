@@ -68,6 +68,7 @@
                       text="Normal Mode" disable="true"/>
             <MenuItem fx:id="darkModeMenuItem" mnemonicParsing="false" onAction="#handleDarkMode" text="Dark Mode"/>
             <MenuItem fx:id="funModeMenuItem" mnemonicParsing="false" onAction="#handleFunMode" text="Fun Mode"/>
+            <MenuItem fx:id="hallowThemeItem" mnemonicParsing="false" onAction="#handleHallowThemeMode" text="HallowTheme"/>
         </Menu>
     </MenuBar>
     <ToolBar>
