@@ -407,14 +407,30 @@ public class EditController {
             curCodeArea.lineStart(SelectionPolicy.ADJUST);
             caretIdx = curCodeArea.getCaretPosition();
             lines = selectedText.split("\\n");
+
         } else {
 
-            caretIdx = curCodeArea.getText().indexOf(selectedText);
-            curCodeArea.moveTo(caretIdx,SelectionPolicy.ADJUST);
+            //curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            IndexRange highlightedRange = curCodeArea.getSelection();
+
+            //moves caret to the front of the selected text
+            curCodeArea.moveTo(highlightedRange.getStart(),SelectionPolicy.ADJUST);
+
+            // move to front of first highlighted line
             curCodeArea.lineStart(SelectionPolicy.EXTEND);
+
+            // get current caret position
             caretIdx = curCodeArea.getCaretPosition();
+
+            // highlight from beginning of first highlighted line to end of highlighted section
+            curCodeArea.selectRange(caretIdx, highlightedRange.getEnd());
+
+            // get all the highlighted text
             selectedText = curCodeArea.getSelectedText();
+
+            // get list of individual string lines
             lines = selectedText.split("\\n");
+
         }
 
 
