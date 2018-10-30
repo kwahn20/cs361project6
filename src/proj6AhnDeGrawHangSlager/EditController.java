@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import java.util.Stack;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 
 /**
@@ -47,6 +48,12 @@ public class EditController {
     private Button prevMatchBtn;
     private Button nextMatchBtn;
     private TextField replaceTextEntry;
+
+
+    private String[] lines;
+    private int caretIdxStart;
+    private int caretIdxEnd;
+    private String selectedText;
 
 
 
@@ -111,42 +118,7 @@ public class EditController {
         getCurJavaCodeArea().selectAll();
     }
 
-    /**
-     * comments out the line that the cursor is one if it uncommented,
-     * undoes a "layer" of commenting (pair of forward slashes "//") if there >= one
-     */
-    public void toggleSingleLineComment() {
 
-        JavaCodeArea curCodeArea = getCurJavaCodeArea();
-
-        // position caret at start of line
-        curCodeArea.lineStart(SelectionPolicy.ADJUST);
-
-        // get caret index location in file
-        int caretIdx = curCodeArea.getCaretPosition();
-
-        // temporarily highlight the current line to get its text as a string
-        curCodeArea.selectLine();
-        String curLineText = curCodeArea.getSelectedText();
-        curCodeArea.deselect();
-
-        // regex to check if current line is commented
-        if (Pattern.matches(" *\\/\\/.*", curLineText)) {
-
-            // uncomment the line by taking out the first instance of "//"
-            String curLineUncommented =
-                    curLineText.replaceFirst("//", "");
-
-            // replace the current line with the newly commented line
-            curCodeArea.replaceText(caretIdx, caretIdx + curLineText.length(),
-                    curLineUncommented);
-
-            return;
-        }
-
-        // add a "//" at the beginning of the line to comment it out
-        curCodeArea.replaceText(caretIdx, caretIdx, "//");
-    }
 
 
     /**
@@ -333,119 +305,170 @@ public class EditController {
     }
 
     /**
-     * Entabs the selected text
+     * comments out the line that the cursor is one if it uncommented,
+     * undoes a "layer" of commenting (pair of forward slashes "//") if there >= one
      */
+    public void toggleSingleLineComment() {
 
-    public void handleEnTabbing() {
-        //lines is an array of lines separated by a \n character
-        String[] lines;
-        int caretIdx;
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
-        String selectedText = curCodeArea.getSelectedText();
+        // position caret at start of line
+        curCodeArea.lineStart(SelectionPolicy.ADJUST);
 
+        // get caret index location in file
+        int caretIdx = curCodeArea.getCaretPosition();
 
-        if (selectedText.equals("")) {
-            curCodeArea.selectLine();
-            selectedText = curCodeArea.getSelectedText();
-            curCodeArea.deselect();
-            curCodeArea.lineStart(SelectionPolicy.ADJUST);
-            caretIdx = curCodeArea.getCaretPosition();
-            lines = selectedText.split("\\n");
+        // temporarily highlight the current line to get its text as a string
+        curCodeArea.selectLine();
+        String curLineText = curCodeArea.getSelectedText();
+        curCodeArea.deselect();
 
-        } else {
+        // regex to check if current line is commented
+        if (Pattern.matches(" *\\/\\/.*", curLineText)) {
 
-            //curCodeArea.lineStart(SelectionPolicy.ADJUST);
-            IndexRange highlightedRange = curCodeArea.getSelection();
+            // uncomment the line by taking out the first instance of "//"
+            String curLineUncommented =
+                    curLineText.replaceFirst("//", "");
 
-            //moves caret to the front of the selected text
-            curCodeArea.moveTo(highlightedRange.getStart(),SelectionPolicy.ADJUST);
+            // replace the current line with the newly commented line
+            curCodeArea.replaceText(caretIdx, caretIdx + curLineText.length(),
+                    curLineUncommented);
 
-            // move to front of first highlighted line
-            curCodeArea.lineStart(SelectionPolicy.EXTEND);
-
-            // get current caret position
-            caretIdx = curCodeArea.getCaretPosition();
-
-            // highlight from beginning of first highlighted line to end of highlighted section
-            curCodeArea.selectRange(caretIdx, highlightedRange.getEnd());
-
-            // get all the highlighted text
-            selectedText = curCodeArea.getSelectedText();
-
-            // get list of individual string lines
-            lines = selectedText.split("\\n");
+            return;
         }
 
-        for (int i = 0; i < lines.length; i++) {
-            singleLineTabbing(caretIdx);
-
-            // incrementing the caret index by the number of characters
-            // in the line and +2 for the new line character at the end
-            caretIdx += lines[i].length() + 2;
-        }
+        // add a "//" at the beginning of the line to comment it out
+        curCodeArea.replaceText(caretIdx, caretIdx, "//");
     }
 
-    /**
-     * Detabs the selected text
-     */
 
-    public void handleDeTabbing() {
+    public void handleCommenting(){
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
-        String selectedText = curCodeArea.getSelectedText();
 
-        //lines is an array of lines separated by a \n character
-        String[] lines;
-        //index of the caret
-        int caretIdx;
-
-        if (selectedText.equals("")) {
-            curCodeArea.selectLine();
-            selectedText = curCodeArea.getSelectedText();
-            curCodeArea.deselect();
-            curCodeArea.lineStart(SelectionPolicy.ADJUST);
-            caretIdx = curCodeArea.getCaretPosition();
-            lines = selectedText.split("\\n");
-
-        } else {
-
-            //curCodeArea.lineStart(SelectionPolicy.ADJUST);
-            IndexRange highlightedRange = curCodeArea.getSelection();
-
-            //moves caret to the front of the selected text
-            curCodeArea.moveTo(highlightedRange.getStart(),SelectionPolicy.ADJUST);
-
-            // move to front of first highlighted line
-            curCodeArea.lineStart(SelectionPolicy.EXTEND);
-
-            // get current caret position
-            caretIdx = curCodeArea.getCaretPosition();
-
-            // highlight from beginning of first highlighted line to end of highlighted section
-            curCodeArea.selectRange(caretIdx, highlightedRange.getEnd());
-
-            // get all the highlighted text
-            selectedText = curCodeArea.getSelectedText();
-
-            // get list of individual string lines
-            lines = selectedText.split("\\n");
-
-        }
-
+        selectedText = curCodeArea.getSelectedText();
+        getSelectedText(curCodeArea);
 
         for (int i = 0; i < lines.length; i++) {
-            curCodeArea.moveTo(caretIdx);
+
             String curLineText = lines[i];
-            singleLineDeTabbing(curLineText, caretIdx);
+
+            // regex to check if current line is commented
+            if (Pattern.matches(" *\\/\\/.*", curLineText)) {
+
+                // uncomment the line by taking out the first instance of "//"
+                String curLineUncommented =
+                        curLineText.replaceFirst("//", "");
+
+                // replace the current line with the newly commented line
+                curCodeArea.replaceText(caretIdxStart, caretIdxStart + curLineText.length(),
+                        curLineUncommented);
+            }
+            else {
+                // add a "//" at the beginning of the line to comment it out
+                curCodeArea.replaceText(caretIdxStart, caretIdxStart, "//");
+            }
+
+            curCodeArea.moveTo(caretIdxStart);
+            curCodeArea.selectLine();
+
+            int lenCurLine = curCodeArea.getSelection().getLength();
+
+            // incrementing the caret index by the number of characters
+            // in the line and +1 for the new line character at the end
+            caretIdxStart+= lenCurLine + 1;
+
+        }
+
+    }
+
+
+    private void getSelectedText(JavaCodeArea curCodeArea){
+        if (selectedText.equals("")) {
+            curCodeArea.selectLine();
+            selectedText = curCodeArea.getSelectedText();
+            curCodeArea.deselect();
+            curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            caretIdxStart = curCodeArea.getCaretPosition();
+            lines = selectedText.split("\\n");
+
+
+        } else {
+
+            //curCodeArea.lineStart(SelectionPolicy.ADJUST);
+            IndexRange highlightedRange = curCodeArea.getSelection();
+
+            //moves caret to the front of the selected text
+            curCodeArea.moveTo(highlightedRange.getStart());
+
+            // move to front of first highlighted line
+            curCodeArea.lineStart(SelectionPolicy.EXTEND);
+
+            // get current caret position
+            caretIdxStart = curCodeArea.getCaretPosition();
+
+            curCodeArea.moveTo(highlightedRange.getEnd());
+            curCodeArea.lineEnd(SelectionPolicy.ADJUST);
+
+            caretIdxEnd = curCodeArea.getCaretPosition();
+
+            // highlight from beginning of first highlighted line to end of highlighted section
+            curCodeArea.selectRange(caretIdxStart, caretIdxEnd);
+
+            // get all the highlighted text
+            selectedText = curCodeArea.getSelectedText();
+
+            // get list of individual string lines
+            lines = selectedText.split("\\n");
+        }
+
+    }
+
+    /**
+     * Tabs the selected text
+     */
+
+    public void handleTabbing() {
+        //lines is an array of lines separated by a \n character
+
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
+
+        selectedText = curCodeArea.getSelectedText();
+
+        getSelectedText(curCodeArea);
+
+        for (int i = 0; i < lines.length; i++) {
+            singleLineTabbing(caretIdxStart);
+            // incrementing the caret index by the number of characters
+            // in the line and +2 for the new line character at the end
+            caretIdxStart += lines[i].length() + 2;
+        }
+    }
+
+
+    /**
+     * Untabs the selected text
+     */
+
+    public void handleUnTabbing() {
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
+
+        selectedText = curCodeArea.getSelectedText();
+
+        getSelectedText(curCodeArea);
+
+        for (int i = 0; i < lines.length; i++) {
+            //curCodeArea.moveTo(caretIdx);
+            String curLineText = lines[i];
+            singleLineUnTabbing(curLineText, caretIdxStart);
 
             // incrementing the caret index by the number of characters
             // in the line and +2 for the new line character at the end
-            caretIdx += lines[i].length() + 2;
+            caretIdxStart += lines[i].length() + 2;
         }
     }
 
     /**
-     * Entabs a single line
+     * Tabs a single line
      */
     private void singleLineTabbing(int caretIdx) {
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
@@ -453,16 +476,16 @@ public class EditController {
     }
 
     /**
-     * Detabs a single line
+     * Untabs a single line
      */
-    private void singleLineDeTabbing(String curLineText, int caretIdx) {
+    private void singleLineUnTabbing(String curLineText, int caretIdx) {
 
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         // regex to check if current line is tabbed
         if (Pattern.matches("(?:[ \\t].*)", curLineText)) {
             // detabs the line by taking out the first instance of a tab
-            String curLineUncommented = curLineText.replaceFirst("[ \\t]", "");
+            String curLineUnTabbed = curLineText.replaceFirst("[ \\t]", "");
 
             curCodeArea.moveTo(caretIdx);
             curCodeArea.lineStart(SelectionPolicy.ADJUST);
@@ -470,7 +493,7 @@ public class EditController {
 
             // replace the current line with the newly commented line
             curCodeArea.replaceText(caretIdx, caretIdx + curLineText.length(),
-                    curLineUncommented);
+                    curLineUnTabbed);
             return;
         }
     }

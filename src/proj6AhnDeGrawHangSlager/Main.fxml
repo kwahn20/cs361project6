@@ -56,8 +56,8 @@
                       text="Paste" accelerator="Shortcut+V"/>
             <MenuItem mnemonicParsing="false" onAction="#handleCommenting" text="Comment/Uncomment"
                       accelerator="Shortcut+/"/>
-            <MenuItem mnemonicParsing="false" onAction="#handleEnTabbing" text="Entab" accelerator="Shortcut+]"/>
-            <MenuItem mnemonicParsing="false" onAction="#handleDeTabbing" text="Detab" accelerator="Shortcut+["/>
+            <MenuItem mnemonicParsing="false" onAction="#handleTabbing" text="Tab" accelerator="Shortcut+]"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleUnTabbing" text="Un-Tab" accelerator="Shortcut+["/>
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll"
                       text="Select All" accelerator="Shortcut+A"/>
             <MenuItem mnemonicParsing="false" onAction="#handleMatchBracketOrParen" text="Match Bracket/Parenthesis" accelerator="Shortcut+M"/>

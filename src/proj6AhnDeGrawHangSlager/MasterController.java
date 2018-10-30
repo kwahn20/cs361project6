@@ -89,23 +89,23 @@ public class MasterController {
      *
      */
     @FXML public void handleCommenting() {
-        editController.toggleSingleLineComment();
+        editController.handleCommenting();
     }
 
     /**
-     * Calls handleEnTabbing from the Edit Controller
+     * Calls handleTabbing from the Edit Controller
      *
      */
-    @FXML public void handleEnTabbing() {
-        editController.handleEnTabbing();
+    @FXML public void handleTabbing() {
+        editController.handleTabbing();
     }
 
     /**
-     * Calls handleDeTabbing from the Edit Controller
+     * Calls handleUnTabbing from the Edit Controller
      *
      */
-    @FXML public void handleDeTabbing() {
-        editController.handleDeTabbing();
+    @FXML public void handleUnTabbing() {
+        editController.handleUnTabbing();
     }
 
     /**
