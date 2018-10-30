@@ -341,45 +341,11 @@ public class EditController {
     }
 
 
-    public void handleCommenting(){
-        JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
-        selectedText = curCodeArea.getSelectedText();
-        getFullSelectedText(curCodeArea);
-
-        for (int i = 0; i < lines.length; i++) {
-
-            String curLineText = lines[i];
-
-            // regex to check if current line is commented
-            if (Pattern.matches(" *[ \\t]*\\/\\/.*", curLineText)) {
-
-                // uncomment the line by taking out the first instance of "//"
-                String curLineUncommented =
-                        curLineText.replaceFirst("//", "");
-
-                // replace the current line with the newly commented line
-                curCodeArea.replaceText(caretIdxStart, caretIdxStart + curLineText.length(),
-                        curLineUncommented);
-            }
-            else {
-                // add a "//" at the beginning of the line to comment it out
-                curCodeArea.replaceText(caretIdxStart, caretIdxStart, "//");
-            }
-
-            curCodeArea.moveTo(caretIdxStart);
-            curCodeArea.selectLine();
-
-            int lenCurLine = curCodeArea.getSelection().getLength();
-
-            // incrementing the caret index by the number of characters
-            // in the line and +1 for the new line character at the end
-            caretIdxStart+= lenCurLine + 1;
-
-        }
-
+    private void incrementCaretIdx(CodeArea curCodeArea){
+        curCodeArea.moveTo(curCodeArea.getCurrentParagraph()+1, 0);
+        caretIdxStart = curCodeArea.getCaretPosition();
     }
-
 
     private void getFullSelectedText(JavaCodeArea curCodeArea){
         if (selectedText.equals("")) {
@@ -426,6 +392,43 @@ public class EditController {
     }
 
     /**
+     * comments out the line that the cursor is one if it uncommented,
+     * undoes a "layer" of commenting (pair of forward slashes "//") if there >= one
+     */
+    public void handleCommenting(){
+        JavaCodeArea curCodeArea = getCurJavaCodeArea();
+
+        selectedText = curCodeArea.getSelectedText();
+        getFullSelectedText(curCodeArea);
+
+        for (int i = 0; i < lines.length; i++) {
+
+            String curLineText = lines[i];
+
+            // regex to check if current line is commented
+            if (Pattern.matches(" *[ \\t]*\\/\\/.*", curLineText)) {
+
+                // uncomment the line by taking out the first instance of "//"
+                String curLineUncommented =
+                        curLineText.replaceFirst("//", "");
+
+                // replace the current line with the newly commented line
+                curCodeArea.replaceText(caretIdxStart, caretIdxStart + curLineText.length(),
+                        curLineUncommented);
+            }
+            else {
+                // add a "//" at the beginning of the line to comment it out
+                curCodeArea.replaceText(caretIdxStart, caretIdxStart, "//");
+            }
+
+            incrementCaretIdx(curCodeArea);
+
+        }
+
+    }
+
+
+    /**
      * Tabs the selected text
      */
 
@@ -437,10 +440,8 @@ public class EditController {
 
         for (int i = 0; i < lines.length; i++) {
             singleLineTabbing(caretIdxStart);
+            incrementCaretIdx(curCodeArea);
 
-            // incrementing the caret index by the number of characters
-            // in the line and +2 for the new line character at the end
-            caretIdxStart += lines[i].length() + 2;
         }
     }
 
@@ -458,10 +459,7 @@ public class EditController {
         for (int i = 0; i < lines.length; i++) {
             String curLineText = lines[i];
             singleLineUnTabbing(curLineText, caretIdxStart);
-
-            // incrementing the caret index by the number of characters
-            // in the line and +2 for the new line character at the end
-            caretIdxStart += lines[i].length() + 2;
+            incrementCaretIdx(curCodeArea);
         }
     }
 
