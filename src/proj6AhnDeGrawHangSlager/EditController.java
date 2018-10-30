@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import java.util.Stack;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 
 /**
@@ -346,14 +345,14 @@ public class EditController {
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         selectedText = curCodeArea.getSelectedText();
-        getSelectedText(curCodeArea);
+        getFullSelectedText(curCodeArea);
 
         for (int i = 0; i < lines.length; i++) {
 
             String curLineText = lines[i];
 
             // regex to check if current line is commented
-            if (Pattern.matches(" *\\/\\/.*", curLineText)) {
+            if (Pattern.matches(" *[ \\t]*\\/\\/.*", curLineText)) {
 
                 // uncomment the line by taking out the first instance of "//"
                 String curLineUncommented =
@@ -382,7 +381,7 @@ public class EditController {
     }
 
 
-    private void getSelectedText(JavaCodeArea curCodeArea){
+    private void getFullSelectedText(JavaCodeArea curCodeArea){
         if (selectedText.equals("")) {
             curCodeArea.selectLine();
             selectedText = curCodeArea.getSelectedText();
@@ -390,7 +389,6 @@ public class EditController {
             curCodeArea.lineStart(SelectionPolicy.ADJUST);
             caretIdxStart = curCodeArea.getCaretPosition();
             lines = selectedText.split("\\n");
-
 
         } else {
 
@@ -406,9 +404,13 @@ public class EditController {
             // get current caret position
             caretIdxStart = curCodeArea.getCaretPosition();
 
+            //moves to the end of the first highlighted selection
             curCodeArea.moveTo(highlightedRange.getEnd());
+
+            //moves to the end of that line
             curCodeArea.lineEnd(SelectionPolicy.ADJUST);
 
+            //grabs that caret idx
             caretIdxEnd = curCodeArea.getCaretPosition();
 
             // highlight from beginning of first highlighted line to end of highlighted section
@@ -428,16 +430,14 @@ public class EditController {
      */
 
     public void handleTabbing() {
-        //lines is an array of lines separated by a \n character
-
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         selectedText = curCodeArea.getSelectedText();
-
-        getSelectedText(curCodeArea);
+        getFullSelectedText(curCodeArea);
 
         for (int i = 0; i < lines.length; i++) {
             singleLineTabbing(caretIdxStart);
+
             // incrementing the caret index by the number of characters
             // in the line and +2 for the new line character at the end
             caretIdxStart += lines[i].length() + 2;
@@ -453,11 +453,9 @@ public class EditController {
         JavaCodeArea curCodeArea = getCurJavaCodeArea();
 
         selectedText = curCodeArea.getSelectedText();
-
-        getSelectedText(curCodeArea);
+        getFullSelectedText(curCodeArea);
 
         for (int i = 0; i < lines.length; i++) {
-            //curCodeArea.moveTo(caretIdx);
             String curLineText = lines[i];
             singleLineUnTabbing(curLineText, caretIdxStart);
 
@@ -505,8 +503,6 @@ public class EditController {
      * enables the Previous and Next buttons if more than one match is found
      */
     public void handleFindText(Boolean showNumMatchesAlert) {
-
-
 
         JavaCodeArea curJavaCodeArea = getCurJavaCodeArea();
         if (curJavaCodeArea == null) {
